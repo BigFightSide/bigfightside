@@ -1,7 +1,10 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter, Geist } from 'next/font/google'
 import { headers } from 'next/headers'
 import React from 'react'
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: 'Big Fight Side – MMA-Plattform',
@@ -25,7 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <html lang="de" className="dark">
+    <html lang="de" className={cn("dark", "font-sans", geist.variable)}>
       <body className={`${inter.variable} ${inter.className} antialiased`}>
         {children}
       </body>
