@@ -40,7 +40,7 @@ export const Fighters: CollectionConfig = {
       type: 'text',
       required: true,
       unique: true,
-      admin: { description: 'URL-Slug, z.B. /fighter/max-mustermann' },
+      admin: { hidden: true, description: 'Wird automatisch aus dem Namen erzeugt' },
       hooks: {
         beforeChange: [formatSlug('name')],
       },

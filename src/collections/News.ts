@@ -22,11 +22,18 @@ export const News: CollectionConfig = {
       required: true,
     },
     {
+      name: 'featuredImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Titelbild',
+      admin: { description: 'Bild für Karten und Detailansicht' },
+    },
+    {
       name: 'slug',
       type: 'text',
       required: true,
       unique: true,
-      admin: { description: 'URL-Slug' },
+      admin: { hidden: true, description: 'Wird automatisch aus dem Titel erzeugt' },
       hooks: {
         beforeChange: [formatSlug('title')],
       },

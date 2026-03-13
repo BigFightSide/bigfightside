@@ -18,6 +18,12 @@ export function Nav() {
             Home
           </Link>
           <Link
+            href="/news"
+            className="rounded-md px-3 py-2 text-sm font-semibold text-muted-light transition hover:bg-anthracite-light hover:text-white"
+          >
+            News
+          </Link>
+          <Link
             href="/fighters"
             className="rounded-md px-3 py-2 text-sm font-semibold text-muted-light transition hover:bg-anthracite-light hover:text-white"
           >

@@ -9,10 +9,12 @@
     "build": "payload generate:types && next build",
     "start": "next start",
     "lint": "next lint",
-    "payload": "payload",
-    "generate:types": "payload generate:types",
-    "migrate:create": "payload migrate:create",
-    "migrate": "payload migrate"
+    "test:db": "node --env-file=.env scripts/test-db.mjs",
+    "payload": "node --env-file=.env ./node_modules/payload/bin.js",
+    "generate:types": "node --env-file=.env ./node_modules/payload/bin.js generate:types",
+    "migrate:create": "node --env-file=.env ./node_modules/payload/bin.js migrate:create",
+    "migrate": "node --env-file=.env scripts/test-db.mjs && node --env-file=.env ./node_modules/payload/bin.js migrate",
+    "migrate:via-app": "node --env-file=.env scripts/migrate-via-app.mjs"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "^3.0.0",

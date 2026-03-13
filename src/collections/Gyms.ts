@@ -27,7 +27,7 @@ export const Gyms: CollectionConfig = {
       type: 'text',
       required: true,
       unique: true,
-      admin: { description: 'URL-Slug, z.B. /gym/team-mma-frankfurt' },
+      admin: { hidden: true, description: 'Wird automatisch aus dem Namen erzeugt' },
       hooks: {
         beforeChange: [formatSlug('name')],
       },

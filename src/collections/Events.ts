@@ -28,7 +28,7 @@ export const Events: CollectionConfig = {
       type: 'text',
       required: true,
       unique: true,
-      admin: { description: 'URL-Slug für die Event-Seite' },
+      admin: { hidden: true, description: 'Wird automatisch aus dem Event-Titel erzeugt' },
       hooks: {
         beforeChange: [formatSlug('name')],
       },
