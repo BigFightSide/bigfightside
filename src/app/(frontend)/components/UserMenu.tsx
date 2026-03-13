@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
-import { CircleUser, LogIn, UserPlus, User, LogOut } from 'lucide-react'
+import { CircleUser, LogIn, UserPlus, User as UserIcon, LogOut } from 'lucide-react'
 import type { User } from '@/payload-types'
 
 const CLOSE_DELAY_MS = 150
@@ -83,7 +83,7 @@ export function UserMenu({ user = null }: UserMenuProps) {
                 role="menuitem"
                 onClick={() => setOpen(false)}
               >
-                <User className="size-4 shrink-0" strokeWidth={1.5} />
+                <UserIcon className="size-4 shrink-0" strokeWidth={1.5} />
                 Mein Profil
               </Link>
               <div className="mt-1 border-t border-border pt-1">
