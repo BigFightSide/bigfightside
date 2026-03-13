@@ -38,6 +38,8 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
+      // Supabase Connection Pooler / Vercel: max. 1 Verbindung pro Instance
+      max: 1,
     },
   }),
   sharp,
