@@ -60,7 +60,7 @@ export default async function NewsPage() {
                   <Link
                     key={item.id}
                     href={`/news/${item.slug}`}
-                    className="group relative overflow-hidden rounded-xl border border-border bg-anthracite-card transition-all duration-300 hover:border-accent hover:shadow-[0_0_30px_-5px_rgba(224,36,36,0.25)]"
+                    className="group relative overflow-hidden rounded-xl border border-border bg-anthracite-card transition-all duration-300 hover:border-accent hover:shadow-[0_0_30px_-5px_rgba(184,134,11,0.3)]"
                   >
                     <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-accent to-gold opacity-90 transition-opacity group-hover:opacity-100" />
                     <div className="flex flex-col">

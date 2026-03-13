@@ -6,10 +6,10 @@ import type { Fighter, Media, Gym } from '@/payload-types'
 
 export const dynamic = 'force-dynamic'
 
-// Dark Mode UFC-Style: #101010 bg, #1A1A1A cards, #E02424 accent, #F3F4F6 text
+// Dark Mode, edel: #101010 bg, #1A1A1A cards, Dunkelgold Akzent, #F3F4F6 text
 const BG_DARK = '#101010'
 const CARD_BG = '#1A1A1A'
-const ACCENT = '#E02424'
+const ACCENT = '#B8860B'
 const TEXT_MAIN = '#F3F4F6'
 const BORDER = 'rgb(31 41 55)' // gray-800
 

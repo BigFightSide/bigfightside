@@ -1,4 +1,7 @@
 import React from 'react'
+import { headers } from 'next/headers'
+import { getPayload } from 'payload'
+import configPromise from '@payload-config'
 import { Nav } from './components/Nav'
 import './styles.css'
 
@@ -12,9 +15,13 @@ export default async function FrontendLayout({
 }: {
   children: React.ReactNode
 }) {
+  const payload = await getPayload({ config: configPromise })
+  const headersList = await headers()
+  const { user } = await payload.auth({ headers: headersList })
+
   return (
     <>
-      <Nav />
+      <Nav user={user} />
       {children}
     </>
   )

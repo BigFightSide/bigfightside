@@ -10,10 +10,10 @@
   --color-anthracite: #121212;
   --color-anthracite-light: #1a1a1a;
   --color-anthracite-card: #1e1e1e;
-  /* Akzent: aggressives Rot für Buttons & CTAs */
-  --color-accent: #E02424;
-  --color-accent-hover: #c41e1e;
-  /* Highlights: Gold */
+  /* Akzent: Dunkelgold – modern & edel */
+  --color-accent: #B8860B;
+  --color-accent-hover: #D4A84B;
+  /* Highlights: Gold (abgestimmt auf Akzent) */
   --color-gold: #D4AF37;
   --color-gold-muted: #b8942f;
   /* Neutrals für Text & Borders */
@@ -64,8 +64,8 @@ h1, h2, h3, h4, h5, h6 {
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --accent: #B8860B;
+  --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
@@ -99,7 +99,7 @@ h1, h2, h3, h4, h5, h6 {
   --secondary-foreground: oklch(0.985 0 0);
   --muted: oklch(0.269 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
+  --accent: #B8860B;
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
   --border: oklch(1 0 0 / 10%);

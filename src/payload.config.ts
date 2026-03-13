@@ -19,16 +19,18 @@ import { Rankings } from '@/collections/Rankings'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Lädt DATABASE_URL aus .env, falls nicht gesetzt (Payload-CLI setzt .env teils anders als Next.js)
+// Lädt DATABASE_URL aus .env, falls nicht gesetzt (Next.js/Turbopack lädt .env teils erst später)
 function ensureDatabaseUrl(): void {
-  if (process.env.DATABASE_URL) return
+  if (process.env.DATABASE_URL?.trim()) return
   try {
     const envPath = path.resolve(process.cwd(), '.env')
     const content = fs.readFileSync(envPath, 'utf8')
-    for (const line of content.split('\n')) {
-      const match = line.match(/^DATABASE_URL=(.+)$/)
+    for (const line of content.split(/\r?\n/)) {
+      const trimmed = line.replace(/^#.*/, '').trim()
+      const match = trimmed.match(/^DATABASE_URL=(.+)$/)
       if (match) {
-        process.env.DATABASE_URL = match[1].trim()
+        const value = match[1].trim().replace(/^["']|["']$/g, '')
+        if (value) process.env.DATABASE_URL = value
         break
       }
     }
@@ -39,10 +41,11 @@ function ensureDatabaseUrl(): void {
 
 // Connection-String ohne SSL-Query-Params (sonst überschreibt sslmode=require unser ssl-Objekt)
 function getConnectionString(): string {
-  const url = process.env.DATABASE_URL || ''
-  if (!url.includes('?')) return url
+  ensureDatabaseUrl()
+  const url = process.env.DATABASE_URL?.trim() || ''
+  if (!url) return url
   const [base] = url.split('?')
-  return base
+  return base.trim()
 }
 
 ensureDatabaseUrl()

@@ -22,6 +22,26 @@ export const Media: CollectionConfig = {
       { name: 'card', width: 768, height: 576, position: 'centre' },
       { name: 'hero', width: 1920, height: 1080, position: 'centre' },
     ],
+    // Server-seitiges Abrufen beim „Bild per URL einfügen“ (z. B. bei Kämpfer-Profilbild), um CORS-/„failed to fetch“-Fehler zu vermeiden. Weitere Hosts bei Bedarf ergänzen.
+    pasteURL: {
+      allowList: [
+        { hostname: 'images.unsplash.com', protocol: 'https' },
+        { hostname: 'unsplash.com', protocol: 'https' },
+        { hostname: 'i.imgur.com', protocol: 'https' },
+        { hostname: 'imgur.com', protocol: 'https' },
+        { hostname: 'cdn.pixabay.com', protocol: 'https' },
+        { hostname: 'pixabay.com', protocol: 'https' },
+        { hostname: 'upload.wikimedia.org', protocol: 'https' },
+        { hostname: 'avatars.githubusercontent.com', protocol: 'https' },
+        { hostname: 'raw.githubusercontent.com', protocol: 'https' },
+        { hostname: 'pbs.twimg.com', protocol: 'https' },
+        { hostname: 'lh3.googleusercontent.com', protocol: 'https' },
+        { hostname: 'localhost', protocol: 'http' },
+        { hostname: '127.0.0.1', protocol: 'http' },
+      ],
+    },
+    // Vermeidet Abbrüche bei strengen Safe-Fetch-Checks mancher Server
+    skipSafeFetch: true,
   },
   fields: [
     {

@@ -47,10 +47,34 @@ export const Events: CollectionConfig = {
       label: 'Ort / Location',
     },
     {
-      name: 'ticketLink',
-      type: 'text',
-      label: 'Ticket-Verkauf Link',
-      admin: { description: 'URL zum Ticket-Verkauf' },
+      name: 'description',
+      type: 'textarea',
+      label: 'Beschreibung',
+      admin: { description: 'Beschreibung des Events' },
+    },
+    {
+      name: 'eventImage',
+      type: 'upload',
+      relationTo: 'media',
+      label: 'Event-Bild',
+      admin: { description: 'Bild für das Event (z. B. Poster oder Header)' },
+    },
+    {
+      type: 'collapsible',
+      label: 'Ticket-Verkauf (optional)',
+      admin: {
+        initCollapsed: true,
+        description: 'Nur ausklappen, wenn du einen Ticket-Link hinterlegen möchtest.',
+      },
+      fields: [
+        {
+          name: 'ticketLink',
+          type: 'text',
+          required: false,
+          label: 'Ticket-Verkauf Link',
+          admin: { description: 'URL zum Ticket-Verkauf' },
+        },
+      ],
     },
     {
       name: 'fightCard',

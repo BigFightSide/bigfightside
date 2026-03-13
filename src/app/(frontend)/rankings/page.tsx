@@ -220,7 +220,7 @@ export default async function RankingsPage({ searchParams }: Props) {
                           <img
                             src={imageUrl}
                             alt={fighter.name}
-                            className="h-full w-full object-cover"
+                            className="h-full w-full object-cover object-top"
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-2xl text-muted">
