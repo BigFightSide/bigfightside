@@ -1,0 +1,48 @@
+@import 'tailwindcss';
+
+/* ===== Big Fight Side – Global Dark Theme ===== */
+@theme {
+  /* Hintergrund: sehr dunkles Anthrazit */
+  --color-anthracite: #121212;
+  --color-anthracite-light: #1a1a1a;
+  --color-anthracite-card: #1e1e1e;
+  /* Akzent: aggressives Rot für Buttons & CTAs */
+  --color-accent: #E02424;
+  --color-accent-hover: #c41e1e;
+  /* Highlights: Gold */
+  --color-gold: #D4AF37;
+  --color-gold-muted: #b8942f;
+  /* Neutrals für Text & Borders */
+  --color-border: #2d2d2d;
+  --color-muted: #737373;
+  --color-muted-light: #a3a3a3;
+  /* Font: fett & modern (Inter wird im Layout geladen) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 18px;
+  line-height: 1.6;
+  background: var(--color-anthracite);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  color: #fafafa;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  background: var(--color-anthracite);
+}
+
+/* Überschriften standardmäßig fett */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+}
+
+/* Theme-basierte Utilities – Buttons, Links etc. nutzen Tailwind-Klassen (bg-accent, text-gold, …) */

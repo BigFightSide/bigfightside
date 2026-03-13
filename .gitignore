@@ -1,0 +1,27 @@
+# Dependencies
+node_modules
+.pnpm-store
+
+# Next
+.next
+out
+
+# Payload
+payload-types.ts
+src/payload-types.ts
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# IDE / OS
+.idea
+.vscode
+.DS_Store
+*.log
+npm-debug.log*
+
+# Build
+dist
+build

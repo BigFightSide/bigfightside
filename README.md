@@ -78,3 +78,4 @@ Slugs sind vorbereitet für Routen wie:
 
 Diese Seiten sind noch nicht angelegt; die Startseite listet die letzten 3 Kämpfer und verlinkt auf `/fighter/[slug]`.
 # bigfightside
+# bigfightside
