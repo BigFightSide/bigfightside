@@ -17,10 +17,11 @@ function getGymName(gym: Fighter['gym']): string | null {
   return (gym as Gym).name ?? null
 }
 
-function getNewsImageUrl(news: { featuredImage?: { url?: string } | number | null }): string | null {
+function getNewsImageUrl(news: { featuredImage?: { url?: string | null } | number | null }): string | null {
   const img = news.featuredImage
   if (!img || typeof img === 'number') return null
-  return (img as { url?: string }).url ?? null
+  const url = (img as { url?: string | null }).url
+  return url ?? null
 }
 
 function formatNewsDate(dateStr: string | null | undefined): string {
