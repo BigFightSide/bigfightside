@@ -4,9 +4,19 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { ChevronDown, Users } from 'lucide-react'
 
+const CLOSE_DELAY_MS = 120
+
 export function FightersMenu() {
   const [open, setOpen] = useState(false)
   const containerRef = useRef<HTMLDivElement | null>(null)
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  const clearCloseTimeout = () => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current)
+      closeTimeoutRef.current = null
+    }
+  }
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -22,12 +32,19 @@ export function FightersMenu() {
     }
   }, [open])
 
+  useEffect(() => () => clearCloseTimeout(), [])
+
   return (
     <div
       ref={containerRef}
       className="relative"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
+      onMouseEnter={() => {
+        clearCloseTimeout()
+        setOpen(true)
+      }}
+      onMouseLeave={() => {
+        closeTimeoutRef.current = setTimeout(() => setOpen(false), CLOSE_DELAY_MS)
+      }}
     >
       <button
         type="button"
@@ -41,7 +58,10 @@ export function FightersMenu() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-40 mt-2 min-w-[190px] rounded-xl border border-border bg-anthracite-card py-2 shadow-lg shadow-black/40">
+        <div
+          className="absolute right-0 top-full z-40 mt-2 min-w-[190px] rounded-xl border border-border bg-anthracite-card py-2 shadow-lg shadow-black/40"
+          onMouseEnter={clearCloseTimeout}
+        >
           <Link
             href="/fighters"
             className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-light transition-colors hover:bg-anthracite-light hover:text-white"

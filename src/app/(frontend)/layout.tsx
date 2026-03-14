@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { Nav } from './components/Nav'
+import { Footer } from './components/Footer'
 import './styles.css'
 
 export const metadata = {
@@ -22,7 +23,10 @@ export default async function FrontendLayout({
   return (
     <>
       <Nav user={user} />
-      {children}
+      <main className="min-h-[calc(100vh-4rem)] bg-anthracite">
+        {children}
+      </main>
+      <Footer />
     </>
   )
 }

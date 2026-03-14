@@ -71,17 +71,19 @@ export default async function FightersPage() {
                   <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-accent to-gold opacity-90 transition-opacity group-hover:opacity-100" />
 
                   <div className="flex flex-col p-5 pl-6">
-<div className="relative mb-4 aspect-[4/3] overflow-hidden rounded-lg bg-anthracite-light">
-                        {imageUrl ? (
-                          <img
-                            src={imageUrl}
-                            alt={fighter.name}
-                            className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                          />
+                    <div className="relative mb-4 aspect-[4/3] overflow-hidden rounded-lg bg-anthracite-light">
+                      {imageUrl ? (
+                        <img
+                          src={imageUrl}
+                          alt={fighter.name}
+                          className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                        />
                       ) : (
-                        <div className="flex h-full w-full items-center justify-center bg-anthracite-light text-4xl text-muted">
-                          🥊
-                        </div>
+                        <img
+                          src="/fighter-placeholder.png"
+                          alt="Platzhalter-Kämpfer"
+                          className="h-full w-full object-cover object-top opacity-80"
+                        />
                       )}
                       <div className="absolute inset-0 bg-gradient-to-t from-anthracite/90 to-transparent opacity-60" />
                     </div>

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { Fighter, Media, Gym } from '@/payload-types'
+import { FightHistoryChart, type FightHistoryChartPoint } from '../../components/FightHistoryChart'
 
 export const dynamic = 'force-dynamic'
 
@@ -156,6 +157,26 @@ export default async function FighterDetailPage({ params }: Props) {
   const fights = (fighter.fightHistory ?? []).filter(
     (f) => f && typeof f.opponent === 'string' && f.result,
   )
+  // Kampfhistorie chronologisch (ältester zuerst) für die Statistik-Kurve: Sieg +1, Niederlage -1
+  const sortedFights = [...fights].sort((a, b) => {
+    const tA = a.date ? new Date(a.date).getTime() : 0
+    const tB = b.date ? new Date(b.date).getTime() : 0
+    return tA - tB
+  })
+  const chartData: FightHistoryChartPoint[] = []
+  if (sortedFights.length > 0) {
+    chartData.push({ dateLabel: 'Beginn', score: 0 })
+    let score = 0
+    for (const f of sortedFights) {
+      score += f.result === 'win' ? 1 : f.result === 'loss' ? -1 : 0
+      chartData.push({
+        dateLabel: formatDateShort(f.date) ?? '',
+        score,
+        result: f.result,
+        opponent: f.opponent,
+      })
+    }
+  }
   const instagram = getInstagramHandle(fighter)
   const twitter = fighter.socialMedia?.twitter?.trim() ?? null
   const youtube = fighter.socialMedia?.youtube?.trim() ?? null
@@ -272,34 +293,79 @@ export default async function FighterDetailPage({ params }: Props) {
                     className="h-full w-full object-cover object-top"
                   />
                 ) : (
-                  <div
-                    className="flex h-full w-full items-center justify-center text-5xl"
-                    style={{ background: BG_DARK, color: 'rgb(107 114 128)' }}
-                  >
-                    🥊
-                  </div>
+                  <img
+                    src="/fighter-placeholder.png"
+                    alt="Platzhalter-Kämpfer"
+                    className="h-full w-full object-cover object-top opacity-80"
+                  />
                 )}
               </div>
             </div>
 
-            {/* Mitte: Rekord als große Zahlen (rot) + Label */}
-            <div className="flex-1 text-center">
-              <div
-                className="font-bold tracking-tight"
-                style={{
-                  fontSize: 'clamp(2.5rem, 6vw, 4rem)',
-                  color: ACCENT,
-                  letterSpacing: '0.02em',
-                }}
-              >
-                {recordW} &nbsp;-&nbsp; {recordL} &nbsp;-&nbsp; {recordD}
+            {/* Mitte: Rekord in drei Spalten (Zahl Gold, Label Grau, zentriert) */}
+            <div className="flex flex-1">
+              <div className="grid w-full grid-cols-3">
+                <div className="flex flex-col items-center justify-center py-2 text-center">
+                  <span
+                    className="font-bold tracking-tight"
+                    style={{
+                      fontSize: 'clamp(2.25rem, 5vw, 3.5rem)',
+                      color: ACCENT,
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {recordW}
+                  </span>
+                  <span
+                    className="mt-1.5 text-xs font-semibold uppercase tracking-wider"
+                    style={{ color: 'rgb(156 163 175)' }}
+                  >
+                    Siege
+                  </span>
+                </div>
+                <div
+                  className="flex flex-col items-center justify-center border-l py-2 text-center"
+                  style={{ borderColor: BORDER }}
+                >
+                  <span
+                    className="font-bold tracking-tight"
+                    style={{
+                      fontSize: 'clamp(2.25rem, 5vw, 3.5rem)',
+                      color: ACCENT,
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {recordL}
+                  </span>
+                  <span
+                    className="mt-1.5 text-xs font-semibold uppercase tracking-wider"
+                    style={{ color: 'rgb(156 163 175)' }}
+                  >
+                    Niederlagen
+                  </span>
+                </div>
+                <div
+                  className="flex flex-col items-center justify-center border-l py-2 text-center"
+                  style={{ borderColor: BORDER }}
+                >
+                  <span
+                    className="font-bold tracking-tight"
+                    style={{
+                      fontSize: 'clamp(2.25rem, 5vw, 3.5rem)',
+                      color: ACCENT,
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {recordD}
+                  </span>
+                  <span
+                    className="mt-1.5 text-xs font-semibold uppercase tracking-wider"
+                    style={{ color: 'rgb(156 163 175)' }}
+                  >
+                    Unentschieden
+                  </span>
+                </div>
               </div>
-              <p
-                className="mt-2 text-xs font-semibold uppercase tracking-wider"
-                style={{ color: 'rgb(156 163 175)' }}
-              >
-                Siege &nbsp;-&nbsp; Niederlagen &nbsp;-&nbsp; Unentschieden
-              </p>
             </div>
 
             {/* Rechts: Status-Block (AKTIV / Titel) */}
@@ -379,6 +445,27 @@ export default async function FighterDetailPage({ params }: Props) {
 
         {/* Trennlinie */}
         <div className="my-6 border-t" style={{ borderColor: BORDER }} />
+
+        {/* ─── Statistik-Kurve (Kampfverlauf: Sieg ↑, Niederlage ↓) ─── */}
+        {chartData.length > 1 && (
+          <>
+            <section
+              className="rounded-lg border overflow-hidden"
+              style={{ background: CARD_BG, borderColor: BORDER }}
+            >
+              <h2
+                className="border-b px-6 py-4 text-xs font-bold uppercase tracking-wider"
+                style={{ borderColor: BORDER, color: 'rgb(107 114 128)' }}
+              >
+                Kampfverlauf
+              </h2>
+              <div className="px-4 py-4 sm:px-6 sm:py-5">
+                <FightHistoryChart data={chartData} />
+              </div>
+            </section>
+            <div className="my-6 border-t" style={{ borderColor: BORDER }} />
+          </>
+        )}
 
         {/* ─── D. Letzte Kämpfe (Fight History) ─── */}
         {fights.length > 0 && (

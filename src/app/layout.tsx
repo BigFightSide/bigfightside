@@ -22,8 +22,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const headersList = await headers()
   const pathname = headersList.get('x-pathname') ?? ''
 
-  // Payload Admin rendert eigenes <html>/<body> – kein doppeltes Wrapping
-  if (pathname.startsWith('/admin')) {
+  // Payload (Admin, API, GraphQL) bringt eigenes <html>/<body> im (payload)-Route-Group mit.
+  // Für alle diese Routen darf hier KEIN zusätzliches <html>/<body> gerendert werden,
+  // sonst entsteht der Fehler "In HTML, <html> cannot be a child of <body>".
+  const isPayloadRoute =
+    pathname.startsWith('/(payload)') ||
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/graphql')
+
+  if (isPayloadRoute) {
     return <>{children}</>
   }
 

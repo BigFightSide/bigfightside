@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { FightersMenu } from './FightersMenu'
 import { SearchToggle } from './SearchToggle'
 import { UserMenu } from './UserMenu'
@@ -14,9 +15,17 @@ export function Nav({ user = null }: NavProps) {
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
         <Link
           href="/"
-          className="text-lg font-bold tracking-tight text-white transition hover:text-accent sm:text-xl"
+          className="flex items-center transition opacity-90 hover:opacity-100"
+          aria-label="Big Fight Side – Startseite"
         >
-          Big Fight Side
+          <Image
+            src="/logo.png"
+            alt="Big Fight Side MMA"
+            width={180}
+            height={48}
+            className="h-10 w-auto sm:h-12"
+            priority
+          />
         </Link>
         <div className="flex items-center gap-1 sm:gap-2">
           <Link

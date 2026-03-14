@@ -231,9 +231,11 @@ export default async function HomePage() {
                             className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-anthracite-light text-3xl text-muted">
-                            🥊
-                          </div>
+                          <img
+                            src="/fighter-placeholder.png"
+                            alt="Platzhalter-Kämpfer"
+                            className="h-full w-full object-cover object-top opacity-80"
+                          />
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-anthracite/90 to-transparent opacity-60" />
                       </div>
@@ -308,30 +310,6 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-anthracite py-8">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <p className="text-sm font-medium text-muted">
-              Big Fight Side – Die Home of MMA in Hessen
-            </p>
-            <div className="flex gap-6">
-              <Link href="/news" className="text-sm font-semibold text-muted-light hover:text-accent">
-                News
-              </Link>
-              <Link href="/events" className="text-sm font-semibold text-muted-light hover:text-accent">
-                Events
-              </Link>
-              <Link href="/fighters" className="text-sm font-semibold text-muted-light hover:text-accent">
-                Kämpfer
-              </Link>
-              <Link href="/admin" className="text-sm font-semibold text-muted-light hover:text-gold">
-                Admin
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
     </main>
   )
 }

@@ -57,7 +57,7 @@ export function UserMenu({ user = null }: UserMenuProps) {
     >
       <button
         type="button"
-        className="rounded-md p-2 text-white transition-colors hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-anthracite"
+        className="rounded-md p-2 text-muted-light transition-colors hover:bg-anthracite-light hover:text-white focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-anthracite"
         aria-label="Benutzermenü"
         aria-expanded={open}
         aria-haspopup="true"
