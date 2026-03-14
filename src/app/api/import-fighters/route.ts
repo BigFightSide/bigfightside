@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import csv from 'csv-parser'
+import type { Fighter } from '@/payload-types'
 
 export const dynamic = 'force-dynamic'
 export const maxDuration = 120
@@ -99,7 +100,7 @@ export async function GET(request: Request) {
         collection: 'fighters',
         data: {
           name,
-          weightClass,
+          weightClass: weightClass as Fighter['weightClass'],
           wins,
           losses,
           draws,
