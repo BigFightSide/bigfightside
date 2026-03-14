@@ -79,7 +79,10 @@ export function FightHistoryChart({ data }: Props) {
   if (!data.length) return null
 
   return (
-    <div className="h-[280px] w-full" style={{ color: CHART_COLORS.text }}>
+    <div
+      className="h-[280px] w-full min-h-[200px] min-w-0"
+      style={{ color: CHART_COLORS.text }}
+    >
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           data={data}

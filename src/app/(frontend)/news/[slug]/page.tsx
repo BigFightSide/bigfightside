@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { RichText } from '@payloadcms/richtext-lexical/react'
+import { getMediaDisplayUrl } from '@/lib/media-url'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,7 +41,7 @@ export default async function NewsDetailPage({
   const item = result.docs[0]
   if (!item) notFound()
 
-  const imageUrl = getNewsImageUrl(item)
+  const imageUrl = getMediaDisplayUrl(getNewsImageUrl(item))
   const dateStr = formatNewsDate(item.publishedAt ?? item.updatedAt)
 
   return (

@@ -4,6 +4,8 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { Fighter, Media, Gym } from '@/payload-types'
 import { FightHistoryChart, type FightHistoryChartPoint } from '../../components/FightHistoryChart'
+import { MediaImageWithFallback } from '../../components/MediaImageWithFallback'
+import { getMediaDisplayUrl } from '@/lib/media-url'
 
 export const dynamic = 'force-dynamic'
 
@@ -145,7 +147,7 @@ export default async function FighterDetailPage({ params }: Props) {
   const fighter = result.docs[0]
   if (!fighter) notFound()
 
-  const imageUrl = getProfileImageUrl(fighter.profileImage)
+  const imageUrl = getMediaDisplayUrl(getProfileImageUrl(fighter.profileImage))
   const gym = getGym(fighter.gym)
   const teamLabel = gym?.name ?? fighter.team ?? null
   const recordW = fighter.wins
@@ -287,9 +289,10 @@ export default async function FighterDetailPage({ params }: Props) {
                 style={{ borderColor: BORDER }}
               >
                 {imageUrl ? (
-                  <img
+                  <MediaImageWithFallback
                     src={imageUrl}
                     alt={fighter.name}
+                    fallbackSrc="/fighter-placeholder.png"
                     className="h-full w-full object-cover object-top"
                   />
                 ) : (

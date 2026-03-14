@@ -50,7 +50,13 @@ function getConnectionString(): string {
 
 ensureDatabaseUrl()
 
+// Für korrekte Media-URLs in Production (z. B. Vercel): NEXT_PUBLIC_SERVER_URL setzen (https://deine-domain.vercel.app)
+const serverURL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined)
+
 export default buildConfig({
+  ...(serverURL && { serverURL }),
   admin: {
     user: Users.slug,
     importMap: {

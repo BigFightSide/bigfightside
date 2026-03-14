@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { Event, Media } from '@/payload-types'
+import { getMediaDisplayUrl } from '@/lib/media-url'
 
 export const dynamic = 'force-dynamic'
 
@@ -41,7 +42,7 @@ export default async function EventDetailPage({
   const event = result.docs[0]
   if (!event) notFound()
 
-  const imageUrl = getEventImageUrl(event?.eventImage)
+  const imageUrl = getMediaDisplayUrl(getEventImageUrl(event?.eventImage))
   const dateStr = formatEventDate(event?.date)
   const hasTicketLink = Boolean(event?.ticketLink?.trim())
   const hasDescription = Boolean(event?.description?.trim())

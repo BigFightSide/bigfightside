@@ -1,5 +1,7 @@
 import Link from 'next/link'
 import { getPayload } from 'payload'
+import { getMediaDisplayUrl } from '@/lib/media-url'
+import { MediaImageWithFallback } from '../components/MediaImageWithFallback'
 import configPromise from '@payload-config'
 import type { Fighter, Media, Gym } from '@/payload-types'
 
@@ -58,7 +60,7 @@ export default async function FightersPage() {
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {fighters.map((fighter) => {
-              const imageUrl = getProfileImageUrl(fighter.profileImage)
+              const imageUrl = getMediaDisplayUrl(getProfileImageUrl(fighter.profileImage))
               const gymName = getGymName(fighter.gym)
               const record = `${fighter.wins}-${fighter.losses}-${fighter.draws}`
 
@@ -73,9 +75,10 @@ export default async function FightersPage() {
                   <div className="flex flex-col p-5 pl-6">
                     <div className="relative mb-4 aspect-[4/3] overflow-hidden rounded-lg bg-anthracite-light">
                       {imageUrl ? (
-                        <img
+                        <MediaImageWithFallback
                           src={imageUrl}
                           alt={fighter.name}
+                          fallbackSrc="/fighter-placeholder.png"
                           className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
                         />
                       ) : (

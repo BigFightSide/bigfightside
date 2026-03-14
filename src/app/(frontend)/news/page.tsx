@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { getMediaDisplayUrl } from '@/lib/media-url'
 
 export const dynamic = 'force-dynamic'
 
@@ -54,7 +55,7 @@ export default async function NewsPage() {
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {newsItems.map((item) => {
-                const imageUrl = getNewsImageUrl(item)
+                const imageUrl = getMediaDisplayUrl(getNewsImageUrl(item))
                 const dateStr = formatNewsDate(item.publishedAt ?? item.updatedAt)
                 return (
                   <Link

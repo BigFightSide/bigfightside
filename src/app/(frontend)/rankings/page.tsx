@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { Fighter, Gym, Media, Ranking } from '@/payload-types'
+import { getMediaDisplayUrl } from '@/lib/media-url'
+import { MediaImageWithFallback } from '../components/MediaImageWithFallback'
 
 export const dynamic = 'force-dynamic'
 
@@ -84,7 +86,7 @@ export default async function RankingsPage({ searchParams }: Props) {
       }
 
       const gym = getGym(fighter.gym)
-      const imageUrl = getProfileImageUrl(fighter.profileImage)
+      const imageUrl = getMediaDisplayUrl(getProfileImageUrl(fighter.profileImage))
       const record = `${fighter.wins}-${fighter.losses}-${fighter.draws}`
 
       return {
@@ -217,9 +219,10 @@ export default async function RankingsPage({ searchParams }: Props) {
                     <div className="flex flex-1 items-center gap-4">
                       <div className="hidden h-14 w-14 overflow-hidden rounded-full bg-anthracite-light sm:block">
                         {imageUrl ? (
-                          <img
+                          <MediaImageWithFallback
                             src={imageUrl}
                             alt={fighter.name}
+                            fallbackSrc="/fighter-placeholder.png"
                             className="h-full w-full object-cover object-top"
                           />
                         ) : (

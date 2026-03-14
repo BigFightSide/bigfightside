@@ -3,6 +3,8 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { Fighter, Media, Gym, Event } from '@/payload-types'
 import React from 'react'
+import { getMediaDisplayUrl } from '@/lib/media-url'
+import { MediaImageWithFallback } from './components/MediaImageWithFallback'
 
 export const dynamic = 'force-dynamic'
 
@@ -135,7 +137,7 @@ export default async function HomePage() {
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {newsItems.map((item) => {
-                const imageUrl = getNewsImageUrl(item)
+                const imageUrl = getMediaDisplayUrl(getNewsImageUrl(item))
                 const dateStr = formatNewsDate(item.publishedAt ?? item.updatedAt)
                 return (
                   <Link
@@ -211,7 +213,7 @@ export default async function HomePage() {
           ) : (
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {fighters.map((fighter) => {
-                const imageUrl = getProfileImageUrl(fighter.profileImage)
+                const imageUrl = getMediaDisplayUrl(getProfileImageUrl(fighter.profileImage))
                 const gymName = getGymName(fighter.gym)
                 const record = `${fighter.wins}-${fighter.losses}-${fighter.draws}`
 
@@ -225,9 +227,10 @@ export default async function HomePage() {
                     <div className="flex flex-col p-4 pl-5">
                       <div className="relative mb-3 aspect-[4/3] overflow-hidden rounded-lg bg-anthracite-light">
                         {imageUrl ? (
-                          <img
+                          <MediaImageWithFallback
                             src={imageUrl}
                             alt={fighter.name}
+                            fallbackSrc="/fighter-placeholder.png"
                             className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
                           />
                         ) : (
