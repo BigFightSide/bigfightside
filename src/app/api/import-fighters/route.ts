@@ -38,6 +38,18 @@ function parseRecord(recordStr: unknown): { wins: number; losses: number; draws:
   return { wins, losses, draws }
 }
 
+/** Slug aus Namen erzeugen (wie formatSlug in Fighters-Collection). */
+function slugFromName(name: string): string {
+  return name
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '-')
+    .replace(/[äöüß]/g, (c) => ({ ä: 'ae', ö: 'oe', ü: 'ue', ß: 'ss' }[c] ?? c))
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const secret = searchParams.get('secret')
@@ -101,6 +113,7 @@ export async function GET(request: Request) {
         draft: false,
         data: {
           name,
+          slug: slugFromName(name),
           weightClass: weightClass as Fighter['weightClass'],
           wins,
           losses,
