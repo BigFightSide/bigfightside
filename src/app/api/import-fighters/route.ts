@@ -98,6 +98,7 @@ export async function GET(request: Request) {
 
       await payload.create({
         collection: 'fighters',
+        draft: false,
         data: {
           name,
           weightClass: weightClass as Fighter['weightClass'],
