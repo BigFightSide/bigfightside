@@ -90,6 +90,9 @@ export async function GET(request: Request) {
     const gymText = row.gym || row.Gym
     const description = row.description || row.Description || ''
     const imageUrl = row.imageUrl || row.ImageUrl || row.image || row.Image
+    const genderRaw = (row.gender || row.Gender || 'male').toString().trim().toLowerCase()
+    const gender: 'male' | 'female' =
+      genderRaw === 'female' || genderRaw === 'frauen' || genderRaw === 'f' ? 'female' : 'male'
 
     if (!name || !weightClassRaw || !record) {
       errors.push({
@@ -114,6 +117,7 @@ export async function GET(request: Request) {
         data: {
           name,
           slug: slugFromName(name),
+          gender,
           weightClass: weightClass as Fighter['weightClass'],
           wins,
           losses,
