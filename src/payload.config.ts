@@ -40,12 +40,18 @@ function ensureDatabaseUrl(): void {
 }
 
 // Connection-String ohne SSL-Query-Params (sonst überschreibt sslmode=require unser ssl-Objekt)
+// Für Supabase: Port 6543 = Pooler (empfohlen für Vercel/Serverless), Port 5432 = Direkt (wenige Connections)
 function getConnectionString(): string {
   ensureDatabaseUrl()
-  const url = process.env.DATABASE_URL?.trim() || ''
+  let url = process.env.DATABASE_URL?.trim() || ''
   if (!url) return url
   const [base] = url.split('?')
-  return base.trim()
+  let out = base.trim()
+  // Supabase: Stelle sicher, dass Pooler (6543) genutzt wird, um MaxClientsInSessionMode zu vermeiden
+  if (out.includes('supabase') && out.includes(':5432/')) {
+    out = out.replace(':5432/', ':6543/')
+  }
+  return out
 }
 
 ensureDatabaseUrl()
@@ -76,8 +82,10 @@ export default buildConfig({
   db: postgresAdapter({
     pool: {
       connectionString: getConnectionString(),
-      // Mind. 2–3, damit Migration und Seiten-Requests nicht um eine Verbindung konkurrieren (max: 1 → Timeout)
-      max: 3,
+      // Pro Vercel-Instanz niedrig halten, damit Supabase-Limit (MaxClientsInSessionMode) nicht erreicht wird
+      max: 10,
+      // Idle-Verbindungen nach 10s schließen → weniger offene Connections, kein Connection-Leak
+      idleTimeoutMillis: 10_000,
       // Verbindung bricht nach 90s ab – Supabase Free Tier braucht nach Pause oft 1–2 Min zum Aufwachen
       connectionTimeoutMillis: 90_000,
       // Supabase: SSL erforderlich, Zertifikat nicht verifizieren (self-signed in chain)
