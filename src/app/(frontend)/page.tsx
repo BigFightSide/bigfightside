@@ -54,19 +54,19 @@ export default async function HomePage() {
   ] = await Promise.all([
     payload.find({
       collection: 'fighters',
-      limit: 3,
+      limit: 4,
       sort: '-updatedAt',
       depth: 2,
     }),
     payload.find({
       collection: 'news',
-      limit: 3,
+      limit: 4,
       sort: '-publishedAt',
       depth: 2,
     }),
     payload.find({
       collection: 'events',
-      limit: 5,
+      limit: 4,
       sort: 'date',
       depth: 0,
       where: {
@@ -88,7 +88,7 @@ export default async function HomePage() {
             backgroundImage: `linear-gradient(180deg, rgba(18,18,18,0.5) 0%, rgba(18,18,18,0.75) 50%, #121212 100%), url("/hero-bg.png")`,
           }}
         />
-        <div className="relative mx-auto w-full max-w-6xl px-4 pb-16 pt-24 sm:px-6">
+        <div className="relative mx-auto mb-16 w-full max-w-6xl px-4 pb-16 pt-24 sm:mb-0 sm:px-6">
           <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-accent">
             Big Fight Side
           </p>
@@ -101,13 +101,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Hauptbereich: Inhalt (3/4) + Event-Sidebar (1/4); Mobil: Inhalt oben, Sidebar unten */}
+      {/* Hauptbereich: Mobil Reihenfolge News → Events → Kämpfer; Desktop: links News+Kämpfer, rechts Events */}
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[3fr_1fr] lg:gap-10">
-          {/* Linke Spalte: News + Kämpfer */}
-          <div className="min-w-0">
-      {/* Neueste News */}
-      <section className="rounded-xl border border-border bg-anthracite-light">
+      {/* 1. Neueste News */}
+      <section className="min-w-0 rounded-xl border border-border bg-anthracite-light lg:order-1">
         <div className="px-5 py-10 sm:px-6">
           <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -135,7 +133,7 @@ export default async function HomePage() {
               </p>
             </div>
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
               {newsItems.map((item) => {
                 const imageUrl = getMediaDisplayUrl(getNewsImageUrl(item))
                 const dateStr = formatNewsDate(item.publishedAt ?? item.updatedAt)
@@ -182,8 +180,49 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Neueste Kämpfer */}
-      <section className="border-t border-border bg-anthracite">
+      {/* 2. Nächste Termine (Events) – Mobil: 2er-Grid; Desktop: Sidebar rechts */}
+      <aside className="lg:order-2 lg:row-span-2 lg:min-w-0">
+            <div className="sticky top-6 rounded-xl border border-border bg-anthracite-card p-5 lg:p-4">
+              <h2 className="mb-4 text-lg font-bold tracking-tight text-gold">
+                Nächste Termine
+              </h2>
+              <div className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:gap-0 lg:divide-y lg:divide-border">
+                {upcomingEvents.length === 0 ? (
+                  <p className="col-span-2 py-4 text-sm text-white lg:col-span-1">
+                    Keine anstehenden Events.
+                  </p>
+                ) : (
+                  upcomingEvents.map((event: Event) => (
+                    <Link
+                      key={event.id}
+                      href={`/events/${event.slug}`}
+                      className="block rounded-lg border border-border bg-anthracite-light p-3 transition-colors hover:border-accent hover:text-accent lg:rounded-none lg:border-0 lg:bg-transparent lg:py-4 lg:first:pt-0 lg:last:pb-0"
+                    >
+                      <span className="block text-[11px] font-semibold uppercase tracking-wider text-accent">
+                        {formatEventDate(event.date)}
+                      </span>
+                      <span className="mt-0.5 block font-semibold text-white">
+                        {event.name}
+                      </span>
+                      <span className="mt-0.5 block text-xs text-muted-light">
+                        {event.location}
+                      </span>
+                    </Link>
+                  ))
+                )}
+              </div>
+              <Link
+                href="/events"
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-accent/50 bg-accent/5 py-2.5 text-xs font-bold text-accent transition hover:bg-accent hover:text-white"
+              >
+                Alle Events
+                <span className="font-bold">→</span>
+              </Link>
+            </div>
+          </aside>
+
+      {/* 3. Neueste Kämpfer */}
+      <section className="min-w-0 border-t border-border bg-anthracite lg:order-3">
         <div className="py-10">
           <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -211,7 +250,7 @@ export default async function HomePage() {
               </p>
             </div>
           ) : (
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
               {fighters.map((fighter) => {
                 const imageUrl = getMediaDisplayUrl(getProfileImageUrl(fighter.profileImage))
                 const gymName = getGymName(fighter.gym)
@@ -268,48 +307,6 @@ export default async function HomePage() {
           )}
         </div>
       </section>
-          </div>
-
-          {/* Rechte Spalte: Nächste Termine (Sidebar) */}
-          <aside className="lg:min-w-0">
-            <div className="sticky top-6 rounded-xl border border-border bg-anthracite-card p-5 lg:p-4">
-              <h2 className="mb-4 text-lg font-bold tracking-tight text-gold">
-                Nächste Termine
-              </h2>
-              <div className="divide-y divide-border">
-                {upcomingEvents.length === 0 ? (
-                  <p className="py-4 text-sm text-white">
-                    Keine anstehenden Events.
-                  </p>
-                ) : (
-                  upcomingEvents.map((event: Event) => (
-                    <Link
-                      key={event.id}
-                      href={`/events/${event.slug}`}
-                      className="block py-4 first:pt-0 last:pb-0 transition-colors hover:text-accent"
-                    >
-                      <span className="block text-[11px] font-semibold uppercase tracking-wider text-accent">
-                        {formatEventDate(event.date)}
-                      </span>
-                      <span className="mt-0.5 block font-semibold text-white">
-                        {event.name}
-                      </span>
-                      <span className="mt-0.5 block text-xs text-muted-light">
-                        {event.location}
-                      </span>
-                    </Link>
-                  ))
-                )}
-              </div>
-              <Link
-                href="/events"
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-accent/50 bg-accent/5 py-2.5 text-xs font-bold text-accent transition hover:bg-accent hover:text-white"
-              >
-                Alle Events
-                <span className="font-bold">→</span>
-              </Link>
-            </div>
-          </aside>
         </div>
       </div>
 

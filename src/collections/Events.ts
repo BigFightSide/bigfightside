@@ -1,6 +1,20 @@
 import type { CollectionConfig } from 'payload'
-import { formatSlug } from '@/hooks/slug'
+import { formatSlug, generateSlugFromTitle } from '@/hooks/slug'
 import { editorOrAdmin } from '@/access'
+
+/** Setzt Slug aus name (Event-Titel), wenn beim CSV-Import etc. kein Slug übergeben wird. */
+function slugFromNameIfEmpty({
+  data,
+  value,
+}: {
+  data?: Record<string, unknown>
+  value?: unknown
+}): string | undefined {
+  if (value != null && String(value).trim() !== '') return value as string
+  const name = data?.name
+  if (typeof name !== 'string') return undefined
+  return generateSlugFromTitle(name)
+}
 
 export const Events: CollectionConfig = {
   slug: 'events',
@@ -10,6 +24,9 @@ export const Events: CollectionConfig = {
     defaultColumns: ['name', 'date', 'status', 'location', 'updatedAt'],
     listSearchableFields: ['name', 'location', 'slug'],
     group: 'Verwaltung',
+    components: {
+      beforeList: ['/components/CSVImport'],
+    },
   },
   labels: {
     singular: 'Event',
@@ -28,8 +45,12 @@ export const Events: CollectionConfig = {
       type: 'text',
       required: true,
       unique: true,
-      admin: { hidden: true, description: 'Wird automatisch aus dem Event-Titel erzeugt' },
+      admin: {
+        position: 'sidebar',
+        description: 'Wird automatisch aus dem Event-Titel erzeugt',
+      },
       hooks: {
+        beforeValidate: [slugFromNameIfEmpty],
         beforeChange: [formatSlug('name')],
       },
     },

@@ -21,12 +21,12 @@ export default async function FrontendLayout({
   const { user } = await payload.auth({ headers: headersList })
 
   return (
-    <>
+    <div className="min-w-0 overflow-x-hidden">
       <Nav user={user} />
-      <main className="min-h-[calc(100vh-4rem)] bg-anthracite">
+      <main className="min-h-[calc(100vh-4rem)] min-w-0 bg-anthracite">
         {children}
       </main>
       <Footer />
-    </>
+    </div>
   )
 }

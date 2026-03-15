@@ -147,6 +147,18 @@ export function Footer() {
             </div>
           </div>
         </div>
+
+        {/* Design-Credit */}
+        <div className="border-t border-border py-4 text-center text-xs text-muted-light">
+          <a
+            href="https://www.319Webdesign.com"
+            target="_blank"
+            rel="noreferrer"
+            className="transition hover:text-white"
+          >
+            designed by 319Webdesign
+          </a>
+        </div>
       </div>
     </footer>
   )

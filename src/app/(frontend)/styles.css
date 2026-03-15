@@ -34,6 +34,9 @@ html {
   background: var(--color-anthracite);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
 }
 
 body {
@@ -42,6 +45,18 @@ body {
   font-family: var(--font-sans);
   font-weight: 500;
   background: var(--color-anthracite);
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* Nav-Links auf Mobile: horizontal scrollbar ausblenden */
+.nav-links-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.nav-links-scroll::-webkit-scrollbar {
+  display: none;
 }
 
 /* Überschriften standardmäßig fett */
