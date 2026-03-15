@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { Fighter, Media, Gym, Event } from '@/payload-types'
 import React from 'react'
+import { Megaphone } from 'lucide-react'
 import { getMediaDisplayUrl } from '@/lib/media-url'
 import { MediaImageWithFallback } from './components/MediaImageWithFallback'
 
@@ -101,11 +102,11 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Hauptbereich: Mobil Reihenfolge News → Events → Kämpfer; Desktop: links News+Kämpfer, rechts Events */}
+      {/* Hauptbereich: Desktop 2 Spalten – links News+Kämpfer, rechts Events + Werbeplatz (Werbebanner bündig mit Kämpfer-Sektion) */}
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[3fr_1fr] lg:gap-10">
       {/* 1. Neueste News */}
-      <section className="min-w-0 rounded-xl border border-border bg-anthracite-light lg:order-1">
+      <section className="min-w-0 lg:order-1 lg:row-1 rounded-xl border border-border bg-anthracite-light">
         <div className="px-5 py-10 sm:px-6">
           <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -134,14 +135,14 @@ export default async function HomePage() {
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
-              {newsItems.map((item) => {
+              {newsItems.map((item, index) => {
                 const imageUrl = getMediaDisplayUrl(getNewsImageUrl(item))
                 const dateStr = formatNewsDate(item.publishedAt ?? item.updatedAt)
                 return (
                   <Link
                     key={item.id}
                     href={`/news/${item.slug}`}
-                    className="group relative overflow-hidden rounded-xl border border-border bg-anthracite-card transition-all duration-300 hover:border-accent hover:shadow-[0_0_24px_-6px_rgba(184,134,11,0.3)]"
+                    className={`group relative overflow-hidden rounded-xl border border-border bg-anthracite-card transition-all duration-300 hover:border-accent hover:shadow-[0_0_24px_-6px_rgba(184,134,11,0.3)] ${index === 3 ? 'lg:hidden' : ''}`}
                   >
                     <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-accent to-gold opacity-90 transition-opacity group-hover:opacity-100" />
                     <div className="flex flex-col">
@@ -180,8 +181,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 2. Nächste Termine (Events) – Mobil: 2er-Grid; Desktop: Sidebar rechts */}
-      <aside className="lg:order-2 lg:row-span-2 lg:min-w-0">
+      {/* 2. Nächste Termine (Events) – Desktop: rechte Spalte, Zeile 1 */}
+      <aside className="lg:order-2 lg:row-1 lg:min-w-0" aria-label="Nächste Termine">
             <div className="sticky top-6 rounded-xl border border-border bg-anthracite-card p-5 lg:p-4">
               <h2 className="mb-4 text-lg font-bold tracking-tight text-gold">
                 Nächste Termine
@@ -222,7 +223,7 @@ export default async function HomePage() {
           </aside>
 
       {/* 3. Neueste Kämpfer */}
-      <section className="min-w-0 border-t border-border bg-anthracite lg:order-3">
+      <section className="min-w-0 border-t border-border bg-anthracite lg:order-3 lg:row-2">
         <div className="py-10">
           <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -251,7 +252,7 @@ export default async function HomePage() {
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
-              {fighters.map((fighter) => {
+              {fighters.map((fighter, index) => {
                 const imageUrl = getMediaDisplayUrl(getProfileImageUrl(fighter.profileImage))
                 const gymName = getGymName(fighter.gym)
                 const record = `${fighter.wins}-${fighter.losses}-${fighter.draws}`
@@ -260,7 +261,7 @@ export default async function HomePage() {
                   <Link
                     key={fighter.id}
                     href={`/fighters/${fighter.slug}`}
-                    className="group relative overflow-hidden rounded-xl border border-border bg-anthracite-card transition-all duration-300 hover:border-accent hover:shadow-[0_0_24px_-6px_rgba(184,134,11,0.3)]"
+                    className={`group relative overflow-hidden rounded-xl border border-border bg-anthracite-card transition-all duration-300 hover:border-accent hover:shadow-[0_0_24px_-6px_rgba(184,134,11,0.3)] ${index === 3 ? 'lg:hidden' : ''}`}
                   >
                     <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-accent to-gold opacity-90 transition-opacity group-hover:opacity-100" />
                     <div className="flex flex-col p-4 pl-5">
@@ -307,6 +308,28 @@ export default async function HomePage() {
           )}
         </div>
       </section>
+
+      {/* 4. Werbeplatz (Ad-Slot) – Desktop: bündig mit Kämpfer-Sektion */}
+      <div className="lg:order-4 lg:row-2 lg:min-w-0 lg:self-start">
+        <div className="rounded-xl border border-border bg-anthracite-card p-5 lg:p-4">
+          <span className="text-[11px] font-medium uppercase tracking-wider text-muted-light">
+            Anzeige
+          </span>
+          <div className="mt-3 flex aspect-[16/9] w-full items-center justify-center rounded-lg border border-border bg-anthracite-light">
+            <Megaphone className="size-10 text-muted-light" strokeWidth={1.25} aria-hidden />
+          </div>
+          <p className="mt-3 text-center text-sm text-muted-light">
+            Hier werben & lokale Kämpfer unterstützen
+          </p>
+          <Link
+            href="/kontakt"
+            className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg border border-border bg-anthracite-light py-2 text-xs font-semibold text-white transition hover:border-accent hover:bg-accent/10 hover:text-accent"
+          >
+            Mehr Infos
+            <span className="font-bold">→</span>
+          </Link>
+        </div>
+      </div>
         </div>
       </div>
 

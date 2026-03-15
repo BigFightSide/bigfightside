@@ -18,8 +18,13 @@
   --color-gold-muted: #b8942f;
   /* Neutrals für Text & Borders */
   --color-border: #2d2d2d;
-  --color-muted: #737373;
-  --color-muted-light: #a3a3a3;
+  /* Globale Textfarben – alle Texte hell (Tailwind: text-text, text-text-muted, text-text-muted-light) */
+  --color-text: #fafafa;
+  --color-text-muted: #d4d4d4;
+  --color-text-muted-light: #e5e5e5;
+  /* Legacy-Muted (werden auf hell umgestellt, Kompatibilität mit text-muted / text-muted-light) */
+  --color-muted: #d4d4d4;
+  --color-muted-light: #e5e5e5;
   /* Font: fett & modern (Inter wird im Layout geladen) */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
@@ -41,7 +46,7 @@ html {
 
 body {
   margin: 0;
-  color: #fafafa;
+  color: var(--color-text);
   font-family: var(--font-sans);
   font-weight: 500;
   background: var(--color-anthracite);
@@ -182,7 +187,8 @@ h1, h2, h3, h4, h5, h6 {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background;
+    color: var(--color-text);
   }
   html {
     @apply font-sans;

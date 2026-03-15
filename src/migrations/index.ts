@@ -4,6 +4,7 @@ import * as migration_20260313_083432_add_rankings_collection from './20260313_0
 import * as migration_20260313_083929_add_fighters_social_media_and_stats from './20260313_083929_add_fighters_social_media_and_stats';
 import * as migration_20260313_090045_add_fighter_status_and_leg_reach from './20260313_090045_add_fighter_status_and_leg_reach';
 import * as migration_20260313_134933 from './20260313_134933';
+import * as migration_20260315_110724 from './20260315_110724';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20260313_134933.up,
     down: migration_20260313_134933.down,
-    name: '20260313_134933'
+    name: '20260313_134933',
+  },
+  {
+    up: migration_20260315_110724.up,
+    down: migration_20260315_110724.down,
+    name: '20260315_110724'
   },
 ];

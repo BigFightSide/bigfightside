@@ -18,7 +18,7 @@ export const Fighters: CollectionConfig = {
   slug: 'fighters',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'nickname', 'weightClass', 'wins', 'losses', 'draws', 'updatedAt'],
+    defaultColumns: ['name', 'nickname', 'gender', 'weightClass', 'wins', 'losses', 'draws', 'updatedAt'],
     listSearchableFields: ['name', 'nickname', 'slug'],
     group: 'Verwaltung',
     description: 'Kämpfer verwalten',
@@ -50,6 +50,19 @@ export const Fighters: CollectionConfig = {
       type: 'text',
       label: 'Spitzname',
       admin: { description: 'Kampfname, z.B. "The Beast"' },
+    },
+    {
+      name: 'gender',
+      type: 'select',
+      required: true,
+      defaultValue: 'male',
+      label: 'Geschlecht',
+      options: [
+        { label: 'Männer', value: 'male' },
+        { label: 'Frauen', value: 'female' },
+      ],
+      hasMany: false,
+      admin: { description: 'Für Filterung auf der Kämpfer-Übersicht (Männer / Frauen)' },
     },
     {
       type: 'row',

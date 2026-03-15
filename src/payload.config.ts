@@ -68,6 +68,12 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      graphics: {
+        Logo: '/components/AdminLogo',
+        Icon: '/components/AdminIcon',
+      },
+    },
   },
   i18n: {
     supportedLanguages: { de, en },
