@@ -4,6 +4,7 @@ import { useRef, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { CircleUser, LogIn, UserPlus, User as UserIcon, LogOut } from 'lucide-react'
 import type { User } from '@/payload-types'
+import { ROLES } from '@/access/roles'
 
 const CLOSE_DELAY_MS = 150
 
@@ -44,6 +45,8 @@ export function UserMenu({ user = null }: UserMenuProps) {
   }, [open])
 
   const displayName = user?.email ?? (user as { name?: string })?.name ?? 'Nutzer'
+  const role = (user as { role?: string })?.role
+  const isAdminOrEditor = role === ROLES.admin || role === ROLES.editor
 
   return (
     <div
@@ -77,17 +80,19 @@ export function UserMenu({ user = null }: UserMenuProps) {
                   {displayName}
                 </p>
               </div>
-              <Link
-                href="/admin"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-light transition-colors hover:bg-anthracite-light hover:text-white"
-                role="menuitem"
-                onClick={() => setOpen(false)}
-              >
-                <UserIcon className="size-4 shrink-0" strokeWidth={1.5} />
-                Mein Profil
-              </Link>
+              {isAdminOrEditor && (
+                <Link
+                  href="/admin"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-light transition-colors hover:bg-anthracite-light hover:text-white"
+                  role="menuitem"
+                  onClick={() => setOpen(false)}
+                >
+                  <UserIcon className="size-4 shrink-0" strokeWidth={1.5} />
+                  Dashboard
+                </Link>
+              )}
               <div className="mt-1 border-t border-border pt-1">
                 <form action="/api/users/logout" method="POST" className="w-full">
                   <button
