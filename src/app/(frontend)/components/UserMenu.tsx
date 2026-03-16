@@ -79,6 +79,8 @@ export function UserMenu({ user = null }: UserMenuProps) {
               </div>
               <Link
                 href="/admin"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-light transition-colors hover:bg-anthracite-light hover:text-white"
                 role="menuitem"
                 onClick={() => setOpen(false)}
@@ -103,6 +105,8 @@ export function UserMenu({ user = null }: UserMenuProps) {
             <>
               <Link
                 href="/admin/login"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-light transition-colors hover:bg-anthracite-light hover:text-white"
                 role="menuitem"
                 onClick={() => setOpen(false)}
