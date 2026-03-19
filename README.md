@@ -23,8 +23,8 @@ MMA-Plattform mit **Next.js (App Router)**, **Payload CMS 3.0** und **Supabase (
 
 3. **Datenbank-Migrationen** (beim ersten Start oder nach Schema-Änderungen)
    ```bash
-   npm run payload migrate:create
-   npm run payload migrate
+   npm run migrate:create
+   npm run migrate
    ```
 
 4. **Entwicklungsserver**
@@ -64,10 +64,22 @@ MMA-Plattform mit **Next.js (App Router)**, **Payload CMS 3.0** und **Supabase (
 ## Skripte
 
 - `npm run dev` – Entwicklung mit Turbopack
-- `npm run build` – Production Build
+- `npm run build` – Production Build (führt automatisch `migrate:ci` aus)
 - `npm run start` – Production Server
 - `npm run payload` – Payload CLI
+- `npm run migrate` – Migrationen ausführen (lokal, mit .env)
+- `npm run migrate:ci` – Migrationen für CI/Vercel (nutzt process.env)
 - `npm run generate:types` – Payload-Typen neu generieren
+
+## Vercel-Deployment
+
+Falls der Build mit der Meldung hängt: *"It looks like you've run Payload in dev mode..."*:
+
+1. In Supabase (SQL Editor) ausführen:
+   ```sql
+   DELETE FROM payload_migrations WHERE batch = -1;
+   ```
+2. Damit werden Dev-Migrationen (batch -1) entfernt, die den interaktiven Prompt auslösen.
 
 ## Dynamische Routen (Frontend)
 
