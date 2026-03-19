@@ -76,18 +76,18 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-anthracite text-white font-sans">
       {/* Hero */}
-      <section className="relative flex min-h-[45vh] flex-col items-center justify-center overflow-hidden bg-anthracite-light">
+      <section className="relative flex min-h-[28vh] sm:min-h-[38vh] md:min-h-[45vh] flex-col items-center justify-center overflow-hidden bg-anthracite-light">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `linear-gradient(180deg, rgba(18,18,18,0.5) 0%, rgba(18,18,18,0.75) 50%, #121212 100%), url("/hero-bg.png")`,
           }}
         />
-        <div className="relative mx-auto w-full max-w-6xl px-4 py-16 text-center sm:px-6">
-          <h1 className="mx-auto max-w-4xl font-bold text-4xl leading-tight tracking-tight text-gold sm:text-5xl md:text-6xl lg:text-7xl">
+        <div className="relative mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-12 md:py-16 text-center">
+          <h1 className="mx-auto max-w-4xl font-bold text-3xl leading-tight tracking-tight text-gold sm:text-5xl md:text-6xl lg:text-7xl">
             Big Fight Side
           </h1>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-light sm:text-xl md:text-2xl">
+          <p className="mx-auto mt-2 max-w-2xl text-base text-muted-light sm:mt-4 sm:text-xl md:text-2xl">
             Kämpfe verfolgen. Fakten checken. Legenden ehren.
           </p>
         </div>

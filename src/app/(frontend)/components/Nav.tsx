@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Menu, X } from 'lucide-react'
@@ -87,7 +88,7 @@ export function Nav({ user = null }: NavProps) {
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
-            className="rounded-md p-2 text-muted-light transition hover:bg-anthracite-light hover:text-white"
+            className="rounded-md bg-anthracite-light p-2 text-muted-light transition hover:bg-anthracite hover:text-white"
             aria-label="Menü öffnen"
           >
             <Menu className="size-6" />
@@ -95,73 +96,83 @@ export function Nav({ user = null }: NavProps) {
         </div>
       </div>
 
-      {/* Mobile Burger-Overlay */}
-      {menuOpen && (
-        <>
-          <div
-            className="fixed inset-0 z-40 bg-black/60 sm:hidden"
-            aria-hidden
-            onClick={() => setMenuOpen(false)}
-          />
-          <div className="fixed inset-y-0 right-0 z-50 w-full max-w-xs border-l border-border bg-anthracite-light shadow-xl sm:hidden">
-            <div className="flex h-16 items-center justify-between border-b border-border px-4">
-              <span className="font-semibold text-white">Menü</span>
-              <button
-                type="button"
-                onClick={() => setMenuOpen(false)}
-                className="rounded-md p-2 text-muted-light transition hover:bg-anthracite hover:text-white"
-                aria-label="Menü schließen"
-              >
-                <X className="size-6" />
-              </button>
+      {/* Mobile Burger-Overlay – per Portal in body, damit kein backdrop-blur/transparenz vom Nav erbt */}
+      {menuOpen &&
+        typeof document !== 'undefined' &&
+        createPortal(
+          <>
+            <div
+              className="fixed inset-0 z-[9998] bg-black/60 sm:hidden"
+              aria-hidden
+              onClick={() => setMenuOpen(false)}
+            />
+            <div
+              className="fixed top-0 right-0 z-[9999] w-full sm:hidden"
+              style={{
+                backgroundColor: '#121212',
+                boxShadow: '-4px 0 24px rgba(0,0,0,0.5)',
+                borderLeft: '1px solid #2d2d2d',
+              }}
+            >
+              <div className="flex h-16 items-center justify-between border-b border-border px-4">
+                <span className="font-semibold text-white">Menü</span>
+                <button
+                  type="button"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-md p-2 text-muted-light transition hover:bg-anthracite hover:text-white"
+                  aria-label="Menü schließen"
+                >
+                  <X className="size-6" />
+                </button>
+              </div>
+              <div className="flex flex-col gap-1 p-4">
+                <Link
+                  href="/hall-of-fame"
+                  className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Hall of Fame
+                </Link>
+                <Link
+                  href="/news"
+                  className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  News
+                </Link>
+                <Link
+                  href="/warehouse"
+                  className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Warehouse
+                </Link>
+                <Link
+                  href="/events"
+                  className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Events
+                </Link>
+                <Link
+                  href="/fighters"
+                  className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Kämpfer
+                </Link>
+                <Link
+                  href="/rankings"
+                  className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Gewichtsklassen
+                </Link>
+              </div>
             </div>
-            <div className="flex flex-col gap-1 p-4">
-              <Link
-                href="/hall-of-fame"
-                className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
-                onClick={() => setMenuOpen(false)}
-              >
-                Hall of Fame
-              </Link>
-              <Link
-                href="/news"
-                className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
-                onClick={() => setMenuOpen(false)}
-              >
-                News
-              </Link>
-              <Link
-                href="/warehouse"
-                className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
-                onClick={() => setMenuOpen(false)}
-              >
-                Warehouse
-              </Link>
-              <Link
-                href="/events"
-                className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
-                onClick={() => setMenuOpen(false)}
-              >
-                Events
-              </Link>
-              <Link
-                href="/fighters"
-                className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
-                onClick={() => setMenuOpen(false)}
-              >
-                Kämpfer
-              </Link>
-              <Link
-                href="/rankings"
-                className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
-                onClick={() => setMenuOpen(false)}
-              >
-                Gewichtsklassen
-              </Link>
-            </div>
-          </div>
-        </>
-      )}
+          </>,
+          document.body,
+        )}
     </nav>
   )
 }
