@@ -19,6 +19,7 @@ MMA-Plattform mit **Next.js (App Router)**, **Payload CMS 3.0** und **Supabase (
    - `.env.example` nach `.env` kopieren
    - `DATABASE_URL`: Supabase PostgreSQL Connection String (Pooler-URL für Serverless empfohlen)
    - `PAYLOAD_SECRET`: Mind. 32 Zeichen (z. B. `openssl rand -base64 32`)
+   - `NEWSDATA_API_KEY`: API-Key von [newsdata.io](https://newsdata.io) für die News-Seite (MMA/UFC/PFL)
 
 3. **Datenbank-Migrationen** (beim ersten Start oder nach Schema-Änderungen)
    ```bash

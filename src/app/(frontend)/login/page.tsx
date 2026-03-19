@@ -2,11 +2,13 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
-export default function RegisterPage() {
+export default function LoginPage() {
   const router = useRouter()
-  const [name, setName] = useState('')
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect') ?? undefined
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -18,49 +20,31 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      const res = await fetch('/api/users', {
+      const res = await fetch('/api/users/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'same-origin',
         body: JSON.stringify({
           email: email.trim(),
           password,
-          name: name.trim(),
-          role: 'editor',
         }),
       })
 
       const data = await res.json().catch(() => ({}))
 
       if (!res.ok) {
-        setError(data.errors?.[0]?.message ?? data.message ?? 'Registrierung fehlgeschlagen.')
+        setError(data.errors?.[0]?.message ?? data.message ?? 'Anmeldung fehlgeschlagen.')
         setLoading(false)
         return
       }
 
-      const loginRes = await fetch('/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'same-origin',
-        body: JSON.stringify({
-          email: email.trim(),
-          password,
-        }),
-      })
-
-      if (!loginRes.ok) {
-        setError('Konto erstellt, aber Anmeldung fehlgeschlagen. Bitte melde dich manuell an.')
-        setLoading(false)
-        return
-      }
-
-      const loginData = await loginRes.json().catch(() => ({}))
-      const username = loginData?.user?.username ?? loginData?.user?.name
+      const user = data.user
+      const username = user?.username ?? user?.name
 
       if (username) {
-        router.push(`/user/${username}`)
+        router.push(redirectTo ?? `/user/${username}`)
       } else {
-        router.push('/')
+        router.push(redirectTo ?? '/')
       }
       router.refresh()
     } catch {
@@ -80,10 +64,10 @@ export default function RegisterPage() {
             ← Zurück
           </Link>
           <h1 className="mt-4 font-bold text-3xl text-white sm:text-4xl">
-            Partner werden
+            Anmelden
           </h1>
           <p className="mt-2 text-white/90">
-            Registriere dich als Partner und erhalte Zugang zum Dashboard.
+            Melde dich mit deinem Konto an.
           </p>
         </div>
       </section>
@@ -103,22 +87,6 @@ export default function RegisterPage() {
           )}
 
           <div className="space-y-5">
-            <div>
-              <label htmlFor="name" className="mb-1.5 block text-sm font-semibold text-white">
-                Name
-              </label>
-              <input
-                id="name"
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-md border border-border bg-anthracite-light px-3 py-2.5 text-white placeholder:text-muted-light focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
-                placeholder="Dein Name"
-                autoComplete="name"
-              />
-            </div>
-
             <div>
               <label htmlFor="email" className="mb-1.5 block text-sm font-semibold text-white">
                 E-Mail
@@ -143,12 +111,11 @@ export default function RegisterPage() {
                 id="password"
                 type="password"
                 required
-                minLength={8}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full rounded-md border border-border bg-anthracite-light px-3 py-2.5 text-white placeholder:text-muted-light focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
                 placeholder="Mind. 8 Zeichen"
-                autoComplete="new-password"
+                autoComplete="current-password"
               />
             </div>
           </div>
@@ -159,13 +126,13 @@ export default function RegisterPage() {
               disabled={loading}
               className="rounded-lg bg-accent px-5 py-2.5 text-sm font-bold text-black transition hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              {loading ? 'Wird angelegt …' : 'Registrieren'}
+              {loading ? 'Wird angemeldet …' : 'Anmelden'}
             </button>
             <Link
-              href="/login"
+              href="/register"
               className="text-sm font-semibold text-white transition hover:text-accent"
             >
-              Bereits Konto? Anmelden
+              Noch kein Konto? Registrieren
             </Link>
           </div>
         </form>

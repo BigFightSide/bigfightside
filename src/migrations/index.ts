@@ -5,6 +5,8 @@ import * as migration_20260313_083929_add_fighters_social_media_and_stats from '
 import * as migration_20260313_090045_add_fighter_status_and_leg_reach from './20260313_090045_add_fighter_status_and_leg_reach';
 import * as migration_20260313_134933 from './20260313_134933';
 import * as migration_20260315_110724 from './20260315_110724';
+import * as migration_20260319_add_user_username_and_fan_role from './20260319_add_user_username_and_fan_role';
+import * as migration_20260319_add_hall_of_fame_collection from './20260319_add_hall_of_fame_collection';
 
 export const migrations = [
   {
@@ -41,5 +43,15 @@ export const migrations = [
     up: migration_20260315_110724.up,
     down: migration_20260315_110724.down,
     name: '20260315_110724'
+  },
+  {
+    up: migration_20260319_add_user_username_and_fan_role.up,
+    down: migration_20260319_add_user_username_and_fan_role.down,
+    name: '20260319_add_user_username_and_fan_role'
+  },
+  {
+    up: migration_20260319_add_hall_of_fame_collection.up,
+    down: migration_20260319_add_hall_of_fame_collection.down,
+    name: '20260319_add_hall_of_fame_collection'
   },
 ];

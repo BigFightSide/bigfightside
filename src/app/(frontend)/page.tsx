@@ -6,6 +6,7 @@ import React from 'react'
 import { Megaphone } from 'lucide-react'
 import { getMediaDisplayUrl } from '@/lib/media-url'
 import { MediaImageWithFallback } from './components/MediaImageWithFallback'
+import { fetchMMANews } from '@/lib/newsdata'
 
 export const dynamic = 'force-dynamic'
 
@@ -18,13 +19,6 @@ function getProfileImageUrl(profileImage: Fighter['profileImage']): string | nul
 function getGymName(gym: Fighter['gym']): string | null {
   if (!gym || typeof gym === 'number') return null
   return (gym as Gym).name ?? null
-}
-
-function getNewsImageUrl(news: { featuredImage?: { url?: string | null } | number | null }): string | null {
-  const img = news.featuredImage
-  if (!img || typeof img === 'number') return null
-  const url = (img as { url?: string | null }).url
-  return url ?? null
 }
 
 function formatNewsDate(dateStr: string | null | undefined): string {
@@ -50,7 +44,7 @@ export default async function HomePage() {
 
   const [
     { docs: fighters },
-    { docs: newsItems },
+    newsApiData,
     { docs: upcomingEvents },
   ] = await Promise.all([
     payload.find({
@@ -59,12 +53,7 @@ export default async function HomePage() {
       sort: '-updatedAt',
       depth: 2,
     }),
-    payload.find({
-      collection: 'news',
-      limit: 4,
-      sort: '-publishedAt',
-      depth: 2,
-    }),
+    fetchMMANews(),
     payload.find({
       collection: 'events',
       limit: 4,
@@ -79,25 +68,27 @@ export default async function HomePage() {
     }),
   ])
 
+  const newsItems =
+    newsApiData.status === 'success' && newsApiData.results
+      ? newsApiData.results.slice(0, 3)
+      : []
+
   return (
     <main className="min-h-screen bg-anthracite text-white font-sans">
       {/* Hero */}
-      <section className="relative flex min-h-[60vh] flex-col justify-end overflow-hidden bg-anthracite-light">
+      <section className="relative flex min-h-[45vh] flex-col items-center justify-center overflow-hidden bg-anthracite-light">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage: `linear-gradient(180deg, rgba(18,18,18,0.5) 0%, rgba(18,18,18,0.75) 50%, #121212 100%), url("/hero-bg.png")`,
           }}
         />
-        <div className="relative mx-auto mb-16 w-full max-w-6xl px-4 pb-16 pt-24 sm:mb-0 sm:px-6">
-          <p className="mb-3 text-sm font-bold uppercase tracking-[0.2em] text-accent">
+        <div className="relative mx-auto w-full max-w-6xl px-4 py-16 text-center sm:px-6">
+          <h1 className="mx-auto max-w-4xl font-bold text-4xl leading-tight tracking-tight text-gold sm:text-5xl md:text-6xl lg:text-7xl">
             Big Fight Side
-          </p>
-          <h1 className="max-w-3xl font-bold text-3xl leading-tight tracking-tight text-white sm:text-4xl md:text-5xl">
-            Die Home of MMA in Hessen
           </h1>
-          <p className="mt-3 max-w-xl text-base text-muted-light sm:text-lg">
-            Deine Plattform für Kämpfer, Gyms und Events – mitten in Hessen.
+          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-light sm:text-xl md:text-2xl">
+            Kämpfe verfolgen. Fakten checken. Legenden ehren.
           </p>
         </div>
       </section>
@@ -105,13 +96,13 @@ export default async function HomePage() {
       {/* Hauptbereich: Desktop 2 Spalten – links News+Kämpfer, rechts Events + Werbeplatz (Werbebanner bündig mit Kämpfer-Sektion) */}
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[3fr_1fr] lg:gap-10">
-      {/* 1. Neueste News */}
+      {/* 1. Aktuelle News */}
       <section className="min-w-0 lg:order-1 lg:row-1 rounded-xl border border-border bg-anthracite-light">
         <div className="px-5 py-10 sm:px-6">
           <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
             <div>
               <h2 className="font-bold text-xl text-white sm:text-2xl">
-                Neueste News
+                Aktuelle News
               </h2>
               <p className="mt-1 text-muted-light">
                 Aktuelle Meldungen und Stories
@@ -128,52 +119,52 @@ export default async function HomePage() {
 
           {newsItems.length === 0 ? (
             <div className="rounded-xl border border-border bg-anthracite-card p-8 text-center">
-              <p className="text-muted">Noch keine News vorhanden.</p>
+              <p className="text-muted">Keine News verfügbar.</p>
               <p className="mt-1 text-sm text-muted">
-                News im <Link href="/admin" className="font-semibold text-accent hover:underline">Admin Panel</Link> anlegen.
+                Aktuelle MMA-News werden von externen Quellen geladen.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-3">
-              {newsItems.map((item, index) => {
-                const imageUrl = getMediaDisplayUrl(getNewsImageUrl(item))
-                const dateStr = formatNewsDate(item.publishedAt ?? item.updatedAt)
+            <div className="flex flex-col gap-4 sm:gap-6">
+              {newsItems.map((item) => {
+                const dateStr = formatNewsDate(item.pubDate)
                 return (
-                  <Link
-                    key={item.id}
-                    href={`/news/${item.slug}`}
-                    className={`group relative overflow-hidden rounded-xl border border-border bg-anthracite-card transition-all duration-300 hover:border-accent hover:shadow-[0_0_24px_-6px_rgba(184,134,11,0.3)] ${index === 3 ? 'lg:hidden' : ''}`}
+                  <a
+                    key={item.article_id}
+                    href={item.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group relative flex overflow-hidden rounded-xl border border-border bg-anthracite-card transition-all duration-300 hover:border-accent hover:shadow-[0_0_24px_-6px_rgba(184,134,11,0.3)]"
                   >
                     <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-accent to-gold opacity-90 transition-opacity group-hover:opacity-100" />
-                    <div className="flex flex-col">
-                      <div className="relative aspect-[16/10] overflow-hidden rounded-t-xl bg-anthracite">
-                        {imageUrl ? (
-                          <img
-                            src={imageUrl}
-                            alt={item.title}
-                            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center bg-anthracite text-3xl text-muted">
-                            📰
-                          </div>
-                        )}
-                        <div className="absolute inset-0 bg-gradient-to-t from-anthracite/80 to-transparent" />
-                      </div>
-                      <div className="flex flex-1 flex-col p-4 pl-5">
-                        <span className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-accent">
-                          {dateStr}
-                        </span>
-                        <h3 className="font-semibold text-base text-white transition-colors group-hover:text-accent line-clamp-2">
-                          {item.title}
-                        </h3>
-                        <span className="mt-3 inline-flex w-fit items-center gap-1.5 text-xs font-semibold text-accent group-hover:underline">
-                          Mehr lesen
-                          <span className="transition-transform group-hover:translate-x-0.5">→</span>
-                        </span>
-                      </div>
+                    <div className="relative flex min-h-0 w-28 shrink-0 overflow-hidden rounded-l-xl bg-anthracite sm:w-36">
+                      {item.image_url ? (
+                        <img
+                          src={item.image_url}
+                          alt=""
+                          className="h-full min-h-[80px] w-full object-cover transition-transform duration-300 group-hover:scale-105 sm:min-h-[100px]"
+                        />
+                      ) : (
+                        <div className="flex h-full min-h-[80px] w-full items-center justify-center bg-anthracite text-2xl text-muted sm:min-h-[100px]">
+                          📰
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-r from-anthracite/60 to-transparent sm:from-transparent" />
                     </div>
-                  </Link>
+                    <div className="flex flex-1 flex-col justify-center p-3 pl-4 sm:p-4 sm:pl-5">
+                      <span className="mb-1 text-[11px] font-semibold uppercase tracking-wider text-accent">
+                        {dateStr}
+                        {item.source_name && ` · ${item.source_name}`}
+                      </span>
+                      <h3 className="font-semibold text-sm text-white transition-colors group-hover:text-accent line-clamp-2 sm:text-base">
+                        {item.title}
+                      </h3>
+                      <span className="mt-2 inline-flex w-fit items-center gap-1.5 text-xs font-semibold text-accent group-hover:underline">
+                        Mehr lesen
+                        <span className="transition-transform group-hover:translate-x-0.5">→</span>
+                      </span>
+                    </div>
+                  </a>
                 )
               })}
             </div>
@@ -182,12 +173,12 @@ export default async function HomePage() {
       </section>
 
       {/* 2. Nächste Termine (Events) – Desktop: rechte Spalte, Zeile 1 */}
-      <aside className="lg:order-2 lg:row-1 lg:min-w-0" aria-label="Nächste Termine">
-            <div className="sticky top-6 rounded-xl border border-border bg-anthracite-card p-5 lg:p-4">
-              <h2 className="mb-4 text-lg font-bold tracking-tight text-gold">
+      <aside className="flex lg:order-2 lg:row-1 lg:min-w-0" aria-label="Nächste Termine">
+            <div className="sticky top-6 flex min-h-0 flex-1 flex-col rounded-xl border border-border bg-anthracite-card p-5 lg:p-4">
+              <h2 className="mb-4 shrink-0 text-lg font-bold tracking-tight text-gold">
                 Nächste Termine
               </h2>
-              <div className="grid grid-cols-2 gap-3 lg:grid-cols-1 lg:gap-0 lg:divide-y lg:divide-border">
+              <div className="grid min-h-0 flex-1 grid-cols-2 gap-3 lg:grid-cols-1 lg:gap-0 lg:divide-y lg:divide-border">
                 {upcomingEvents.length === 0 ? (
                   <p className="col-span-2 py-4 text-sm text-white lg:col-span-1">
                     Keine anstehenden Events.
@@ -214,7 +205,7 @@ export default async function HomePage() {
               </div>
               <Link
                 href="/events"
-                className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-accent/50 bg-accent/5 py-2.5 text-xs font-bold text-accent transition hover:bg-accent hover:text-white"
+                className="mt-4 flex w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-accent/50 bg-accent/5 py-2.5 text-xs font-bold text-accent transition hover:bg-accent hover:text-white"
               >
                 Alle Events
                 <span className="font-bold">→</span>

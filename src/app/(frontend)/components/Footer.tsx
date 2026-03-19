@@ -95,6 +95,11 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/warehouse" className="transition hover:text-accent-hover">
+                  Warehouse
+                </Link>
+              </li>
+              <li>
                 <Link href="/gyms" className="transition hover:text-accent-hover">
                   Gyms
                 </Link>

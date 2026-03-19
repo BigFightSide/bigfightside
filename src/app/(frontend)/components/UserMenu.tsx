@@ -47,6 +47,7 @@ export function UserMenu({ user = null }: UserMenuProps) {
   const displayName = user?.email ?? (user as { name?: string })?.name ?? 'Nutzer'
   const role = (user as { role?: string })?.role
   const isAdminOrEditor = role === ROLES.admin || role === ROLES.editor
+  const profileHref = user?.username ? `/user/${user.username}` : '/'
 
   return (
     <div
@@ -80,6 +81,15 @@ export function UserMenu({ user = null }: UserMenuProps) {
                   {displayName}
                 </p>
               </div>
+              <Link
+                href={profileHref}
+                className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-light transition-colors hover:bg-anthracite-light hover:text-white"
+                role="menuitem"
+                onClick={() => setOpen(false)}
+              >
+                <UserIcon className="size-4 shrink-0" strokeWidth={1.5} />
+                Profil
+              </Link>
               {isAdminOrEditor && (
                 <Link
                   href="/admin"
@@ -109,9 +119,7 @@ export function UserMenu({ user = null }: UserMenuProps) {
           ) : (
             <>
               <Link
-                href="/admin/login"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="/login"
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-muted-light transition-colors hover:bg-anthracite-light hover:text-white"
                 role="menuitem"
                 onClick={() => setOpen(false)}

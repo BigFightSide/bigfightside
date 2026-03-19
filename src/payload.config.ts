@@ -5,9 +5,8 @@ import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
-import { de } from 'payload/i18n/de'
-import { en } from 'payload/i18n/en'
 
+import { migrations } from '@/migrations'
 import { Users } from '@/collections/Users'
 import { Media } from '@/collections/Media'
 import { Gyms } from '@/collections/Gyms'
@@ -15,6 +14,7 @@ import { Fighters } from '@/collections/Fighters'
 import { Events } from '@/collections/Events'
 import { News } from '@/collections/News'
 import { Rankings } from '@/collections/Rankings'
+import { HallOfFame } from '@/collections/HallOfFame'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -75,17 +75,15 @@ export default buildConfig({
       },
     },
   },
-  i18n: {
-    supportedLanguages: { de, en },
-    fallbackLanguage: 'de',
-  },
-  collections: [Users, Media, Gyms, Fighters, Events, News, Rankings],
+  // i18n entfernt, damit das Admin unter /admin läuft (ohne /de in der URL)
+  collections: [Users, Media, Gyms, Fighters, Events, News, Rankings, HallOfFame],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: postgresAdapter({
+    prodMigrations: migrations,
     pool: {
       connectionString: getConnectionString(),
       // Pro Vercel-Instanz niedrig halten, damit Supabase-Limit (MaxClientsInSessionMode) nicht erreicht wird

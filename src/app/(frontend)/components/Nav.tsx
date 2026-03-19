@@ -49,16 +49,22 @@ export function Nav({ user = null }: NavProps) {
         <div className="hidden sm:flex sm:min-w-0 sm:shrink sm:items-center sm:justify-end sm:gap-2">
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <Link
-              href="/"
+              href="/hall-of-fame"
               className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-muted-light transition hover:bg-anthracite-light hover:text-white"
             >
-              Home
+              Hall of Fame
             </Link>
             <Link
               href="/news"
               className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-muted-light transition hover:bg-anthracite-light hover:text-white"
             >
               News
+            </Link>
+            <Link
+              href="/warehouse"
+              className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-muted-light transition hover:bg-anthracite-light hover:text-white"
+            >
+              Warehouse
             </Link>
             <Link
               href="/events"
@@ -111,11 +117,11 @@ export function Nav({ user = null }: NavProps) {
             </div>
             <div className="flex flex-col gap-1 p-4">
               <Link
-                href="/"
+                href="/hall-of-fame"
                 className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
                 onClick={() => setMenuOpen(false)}
               >
-                Home
+                Hall of Fame
               </Link>
               <Link
                 href="/news"
@@ -123,6 +129,13 @@ export function Nav({ user = null }: NavProps) {
                 onClick={() => setMenuOpen(false)}
               >
                 News
+              </Link>
+              <Link
+                href="/warehouse"
+                className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
+                onClick={() => setMenuOpen(false)}
+              >
+                Warehouse
               </Link>
               <Link
                 href="/events"
