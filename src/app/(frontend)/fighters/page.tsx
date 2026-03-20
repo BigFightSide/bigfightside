@@ -25,10 +25,10 @@ export default async function FightersPage() {
     <main className="min-h-screen bg-anthracite text-white font-sans">
       {/* Header */}
       <header className="border-b border-border bg-anthracite/95 backdrop-blur supports-[backdrop-filter]:bg-anthracite/90">
-        <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+        <div className="mx-auto max-w-6xl px-4 py-6 text-center sm:px-6">
           <Link
             href="/"
-            className="text-sm font-semibold uppercase tracking-wider text-muted-light transition hover:text-accent"
+            className="inline-block text-sm font-semibold uppercase tracking-wider text-muted-light transition hover:text-accent"
           >
             ← Zurück
           </Link>
