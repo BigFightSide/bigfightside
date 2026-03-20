@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-import { ROLES } from '@/access/roles'
+import { ROLES, isAdmin } from '@/access/roles'
 import { ensureUniqueUsername } from '@/hooks/userUsername'
 
 export const Users: CollectionConfig = {
@@ -13,6 +13,8 @@ export const Users: CollectionConfig = {
   access: {
     create: () => true,
     read: () => true,
+    update: ({ req: { user } }) => !!user && isAdmin(user.role),
+    delete: ({ req: { user } }) => !!user && isAdmin(user.role),
   },
   hooks: {
     beforeChange: [ensureUniqueUsername],

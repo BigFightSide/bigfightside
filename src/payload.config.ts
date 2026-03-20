@@ -19,19 +19,19 @@ import { HallOfFame } from '@/collections/HallOfFame'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Lädt DATABASE_URL aus .env, falls nicht gesetzt (Next.js/Turbopack lädt .env teils erst später)
-function ensureDatabaseUrl(): void {
-  if (process.env.DATABASE_URL?.trim()) return
+// Lädt Variablen aus .env, falls nicht gesetzt (z.B. bei Standalone-Scripts wie seedGlobalMMA)
+function ensureEnvFromFile(): void {
+  if (process.env.DATABASE_URL?.trim() && process.env.PAYLOAD_SECRET?.trim()) return
   try {
     const envPath = path.resolve(process.cwd(), '.env')
     const content = fs.readFileSync(envPath, 'utf8')
     for (const line of content.split(/\r?\n/)) {
       const trimmed = line.replace(/^#.*/, '').trim()
-      const match = trimmed.match(/^DATABASE_URL=(.+)$/)
+      const match = trimmed.match(/^(DATABASE_URL|PAYLOAD_SECRET)=(.+)$/)
       if (match) {
-        const value = match[1].trim().replace(/^["']|["']$/g, '')
-        if (value) process.env.DATABASE_URL = value
-        break
+        const key = match[1]
+        const value = match[2].trim().replace(/^["']|["']$/g, '')
+        if (value) process.env[key] = value
       }
     }
   } catch {
@@ -42,7 +42,7 @@ function ensureDatabaseUrl(): void {
 // Connection-String ohne SSL-Query-Params (sonst überschreibt sslmode=require unser ssl-Objekt)
 // Für Supabase: Port 6543 = Pooler (empfohlen für Vercel/Serverless), Port 5432 = Direkt (wenige Connections)
 function getConnectionString(): string {
-  ensureDatabaseUrl()
+  ensureEnvFromFile()
   let url = process.env.DATABASE_URL?.trim() || ''
   if (!url) return url
   const [base] = url.split('?')
@@ -54,7 +54,7 @@ function getConnectionString(): string {
   return out
 }
 
-ensureDatabaseUrl()
+ensureEnvFromFile()
 
 // Für korrekte Media-URLs in Production (z. B. Vercel): NEXT_PUBLIC_SERVER_URL setzen (https://deine-domain.vercel.app)
 const serverURL =

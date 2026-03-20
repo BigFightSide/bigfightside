@@ -41,8 +41,8 @@ export default async function FightersPage() {
         </div>
       </header>
 
-      {/* Tabs + Grid + Mehr laden (Client-Komponente) */}
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
+      {/* Filter-Sidebar + Tabs + Grid (Client-Komponente) */}
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
         <FightersList fightersMen={fightersMen} fightersWomen={fightersWomen} />
       </div>
     </main>
