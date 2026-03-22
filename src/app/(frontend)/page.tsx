@@ -3,7 +3,8 @@ import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { Fighter, Media, Gym, Event } from '@/payload-types'
 import React from 'react'
-import { Megaphone } from 'lucide-react'
+import { Megaphone, Package, ExternalLink } from 'lucide-react'
+import { products } from '@/lib/warehouse-products'
 import { getMediaDisplayUrl } from '@/lib/media-url'
 import { MediaImageWithFallback } from './components/MediaImageWithFallback'
 import { fetchMMANews } from '@/lib/newsdata'
@@ -322,6 +323,71 @@ export default async function HomePage() {
         </div>
       </div>
         </div>
+      </div>
+
+      {/* Aus dem Warehouse */}
+      <div className="mx-auto max-w-6xl px-4 pb-12 sm:px-6">
+        <section className="border-t border-border pt-10">
+          <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h2 className="font-bold text-xl text-white sm:text-2xl">
+                Aus dem Warehouse
+              </h2>
+              <p className="mt-1 text-muted-light">
+                Empfohlene Ausrüstung für deinen Kampfsport
+              </p>
+            </div>
+            <Link
+              href="/warehouse"
+              className="inline-flex items-center gap-2 rounded-lg border border-accent bg-accent/10 px-3.5 py-2 text-xs font-bold text-accent transition hover:bg-accent hover:text-white"
+            >
+              Zum Warehouse
+              <span className="font-bold">→</span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 sm:gap-5 lg:grid-cols-4">
+            {products.slice(0, 4).map((product) => (
+              <a
+                key={product.id}
+                href={product.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative flex flex-col overflow-hidden rounded-xl border border-border bg-anthracite-card transition-all duration-300 hover:border-accent hover:shadow-[0_0_24px_-6px_rgba(184,134,11,0.3)]"
+              >
+                <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-accent to-gold opacity-90 transition-opacity group-hover:opacity-100" />
+                <div className="flex flex-1 flex-col p-4 pl-5">
+                  <div className="relative mb-3 aspect-square overflow-hidden rounded-lg bg-anthracite-light">
+                    {product.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-anthracite">
+                        <Package className="size-12 text-muted opacity-40" aria-hidden />
+                      </div>
+                    )}
+                  </div>
+                  <h3 className="line-clamp-2 font-semibold text-sm text-white transition-colors group-hover:text-accent">
+                    {product.name}
+                  </h3>
+                  <p className="mt-1 line-clamp-2 text-xs text-muted-light">
+                    {product.description}
+                  </p>
+                  <div className="mt-2 inline-flex w-fit items-center rounded-md bg-accent/15 px-2 py-0.5 text-xs font-bold text-accent">
+                    {product.price}
+                  </div>
+                  <span className="mt-auto flex items-center gap-1 pt-3 text-xs font-semibold text-accent group-hover:underline">
+                    Bei Amazon prüfen
+                    <ExternalLink className="size-3" aria-hidden />
+                  </span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
       </div>
 
     </main>
