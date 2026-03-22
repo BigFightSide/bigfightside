@@ -85,6 +85,16 @@ export const News: CollectionConfig = {
       admin: { date: { pickerAppearance: 'dayAndTime' } },
     },
     {
+      name: 'taggedFighters',
+      type: 'relationship',
+      relationTo: 'fighters',
+      hasMany: true,
+      label: 'Verknüpfte Kämpfer',
+      admin: {
+        description: 'Kämpfer, die in diesem Artikel erwähnt werden (für personalisierte Feeds)',
+      },
+    },
+    {
       type: 'row',
       fields: [
         {

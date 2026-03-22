@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { headers } from 'next/headers'
 import type { Fighter } from '@/payload-types'
 import { FightersList } from './FightersList'
 
@@ -8,6 +9,8 @@ export const dynamic = 'force-dynamic'
 
 export default async function FightersPage() {
   const payload = await getPayload({ config: configPromise })
+  const headersList = await headers()
+  const { user: currentUser } = await payload.auth({ headers: headersList })
 
   const { docs: allFighters } = await payload.find({
     collection: 'fighters',
@@ -20,6 +23,19 @@ export default async function FightersPage() {
     (f) => f.gender === 'male' || (f as Fighter & { gender?: string }).gender == null
   )
   const fightersWomen = (allFighters as Fighter[]).filter((f) => f.gender === 'female')
+
+  let initialFavoriteIds: number[] = []
+  if (currentUser) {
+    const userWithFavorites = await payload.findByID({
+      collection: 'users',
+      id: currentUser.id,
+      depth: 0,
+      overrideAccess: true,
+    })
+    initialFavoriteIds = ((userWithFavorites.favorites ?? []) as (number | Fighter)[]).map(
+      (f) => (typeof f === 'number' ? f : f.id),
+    )
+  }
 
   return (
     <main className="min-h-screen bg-anthracite text-white font-sans">
@@ -43,7 +59,12 @@ export default async function FightersPage() {
 
       {/* Filter-Sidebar + Tabs + Grid (Client-Komponente) */}
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
-        <FightersList fightersMen={fightersMen} fightersWomen={fightersWomen} />
+        <FightersList
+          fightersMen={fightersMen}
+          fightersWomen={fightersWomen}
+          initialFavoriteIds={initialFavoriteIds}
+          isLoggedIn={!!currentUser}
+        />
       </div>
     </main>
   )

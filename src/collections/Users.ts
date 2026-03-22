@@ -51,5 +51,15 @@ export const Users: CollectionConfig = {
       saveToJWT: true,
       hasMany: false,
     },
+    {
+      name: 'favorites',
+      type: 'relationship',
+      relationTo: 'fighters',
+      hasMany: true,
+      label: 'Favorisierte Kämpfer',
+      admin: {
+        description: 'Kämpfer, denen dieser User folgt',
+      },
+    },
   ],
 }

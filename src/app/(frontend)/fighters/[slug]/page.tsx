@@ -2,10 +2,12 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { headers } from 'next/headers'
 import type { Fighter, Media, Gym } from '@/payload-types'
 import { FightHistoryChart, type FightHistoryChartPoint } from '../../components/FightHistoryChart'
 import { MediaImageWithFallback } from '../../components/MediaImageWithFallback'
 import { getMediaDisplayUrl } from '@/lib/media-url'
+import { FavoriteButton } from '@/components/FavoriteButton'
 
 export const dynamic = 'force-dynamic'
 
@@ -136,6 +138,8 @@ export async function generateMetadata({ params }: Props) {
 export default async function FighterDetailPage({ params }: Props) {
   const { slug } = await params
   const payload = await getPayload({ config: configPromise })
+  const headersList = await headers()
+  const { user: currentUser } = await payload.auth({ headers: headersList })
 
   const result = await payload.find({
     collection: 'fighters',
@@ -146,6 +150,20 @@ export default async function FighterDetailPage({ params }: Props) {
 
   const fighter = result.docs[0]
   if (!fighter) notFound()
+
+  let isFavorite = false
+  if (currentUser) {
+    const userWithFavorites = await payload.findByID({
+      collection: 'users',
+      id: currentUser.id,
+      depth: 0,
+      overrideAccess: true,
+    })
+    const favoriteIds = ((userWithFavorites.favorites ?? []) as (number | Fighter)[]).map(
+      (f) => (typeof f === 'number' ? f : f.id),
+    )
+    isFavorite = favoriteIds.includes(fighter.id)
+  }
 
   const imageUrl = getMediaDisplayUrl(getProfileImageUrl(fighter.profileImage))
   const gym = getGym(fighter.gym)
@@ -259,17 +277,25 @@ export default async function FighterDetailPage({ params }: Props) {
               )}
             </div>
 
-            {/* Rechts: Gewichtsklasse */}
-            {fighter.weightClass && (
-              <div className="text-right">
+            {/* Rechts: Gewichtsklasse + Favoriten-Button */}
+            <div className="flex flex-col items-end gap-3">
+              {fighter.weightClass && (
                 <span
                   className="text-xs font-bold uppercase tracking-[0.15em]"
                   style={{ color: 'rgb(156 163 175)' }}
                 >
                   {fighter.weightClass.toUpperCase()}
                 </span>
-              </div>
-            )}
+              )}
+              {currentUser && (
+                <FavoriteButton
+                  fighterId={fighter.id}
+                  fighterName={fighter.name}
+                  initialIsFavorite={isFavorite}
+                  size="lg"
+                />
+              )}
+            </div>
           </div>
         </section>
 

@@ -8,6 +8,7 @@ import * as migration_20260315_110724 from './20260315_110724';
 import * as migration_20260319_add_hall_of_fame_collection from './20260319_add_hall_of_fame_collection';
 import * as migration_20260319_add_user_username_and_fan_role from './20260319_add_user_username_and_fan_role';
 import * as migration_20260322_142905 from './20260322_142905';
+import * as migration_20260322_add_favorites_and_news_fighters from './20260322_add_favorites_and_news_fighters';
 
 export const migrations = [
   {
@@ -58,6 +59,11 @@ export const migrations = [
   {
     up: migration_20260322_142905.up,
     down: migration_20260322_142905.down,
-    name: '20260322_142905'
+    name: '20260322_142905',
+  },
+  {
+    up: migration_20260322_add_favorites_and_news_fighters.up,
+    down: migration_20260322_add_favorites_and_news_fighters.down,
+    name: '20260322_add_favorites_and_news_fighters',
   },
 ];

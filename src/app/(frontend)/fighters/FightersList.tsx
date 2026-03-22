@@ -11,6 +11,7 @@ import {
   initialFilters,
   type FightersFilterState,
 } from './FightersFilters'
+import { FavoriteButton } from '@/components/FavoriteButton'
 import type { Fighter, Media, Gym } from '@/payload-types'
 
 const INITIAL_COUNT = 6
@@ -62,9 +63,16 @@ type TabId = 'male' | 'female'
 interface FightersListProps {
   fightersMen: Fighter[]
   fightersWomen: Fighter[]
+  initialFavoriteIds?: number[]
+  isLoggedIn?: boolean
 }
 
-export function FightersList({ fightersMen, fightersWomen }: FightersListProps) {
+export function FightersList({
+  fightersMen,
+  fightersWomen,
+  initialFavoriteIds = [],
+  isLoggedIn = false,
+}: FightersListProps) {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<TabId>('male')
   const [visibleCount, setVisibleCount] = useState(INITIAL_COUNT)
@@ -232,6 +240,17 @@ export function FightersList({ fightersMen, fightersWomen }: FightersListProps) 
                           />
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-anthracite/90 to-transparent opacity-60" />
+                        {/* Favoriten-Button oben rechts auf dem Bild */}
+                        {isLoggedIn && (
+                          <div className="absolute right-2 top-2">
+                            <FavoriteButton
+                              fighterId={fighter.id}
+                              fighterName={fighter.name}
+                              initialIsFavorite={initialFavoriteIds.includes(fighter.id)}
+                              size="sm"
+                            />
+                          </div>
+                        )}
                       </div>
                       <h2 className="font-bold text-xl text-white transition-colors group-hover:text-accent">
                         {fighter.name}
