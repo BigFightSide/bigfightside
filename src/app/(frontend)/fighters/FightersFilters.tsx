@@ -283,4 +283,3 @@ export function FightersFilters({
 }
 
 export { initialFilters, hasActiveFilters }
-export type { FightersFilterState }
