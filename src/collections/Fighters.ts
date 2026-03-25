@@ -22,6 +22,9 @@ export const Fighters: CollectionConfig = {
     listSearchableFields: ['name', 'nickname', 'slug'],
     group: 'Verwaltung',
     description: 'Kämpfer verwalten',
+    components: {
+      beforeList: ['/components/CSVImportFighters'],
+    },
   },
   labels: {
     singular: 'Kämpfer',

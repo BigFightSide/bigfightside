@@ -3,9 +3,11 @@
 import { useEffect, useState } from 'react'
 import { Loader2 } from 'lucide-react'
 
+const MMA_FALLBACK_IMAGE =
+  'https://images.unsplash.com/photo-1595078475328-1ab05d0a6a0e?auto=format&fit=crop&q=80&w=500'
+
 /**
- * Ruft MMA/UFC/PFL News von unserer API ab (proxied zu newsdata.io).
- * Kann auch außerhalb der NewsCards-Komponente verwendet werden.
+ * Ruft MMA-News von unserer API ab (proxied zum GNP1 RSS-Feed).
  */
 export async function fetchMMANews(): Promise<{
   results: NewsArticle[]
@@ -32,7 +34,7 @@ function formatNewsDate(dateStr: string): string {
   try {
     return new Date(dateStr).toLocaleDateString('de-DE', {
       day: '2-digit',
-      month: 'short',
+      month: '2-digit',
       year: 'numeric',
     })
   } catch {
@@ -59,7 +61,7 @@ export function NewsCards() {
         }
 
         if (!data.results?.length) {
-          setError('Keine News gefunden. Möglicherweise ist das API-Limit erreicht.')
+          setError('Keine News gefunden.')
           setArticles([])
           return
         }
@@ -91,9 +93,7 @@ export function NewsCards() {
       <div className="rounded-xl border border-border bg-anthracite-card p-12 text-center">
         <p className="font-semibold text-accent">Fehler</p>
         <p className="mt-2 text-muted">{error}</p>
-        <p className="mt-2 text-sm text-muted">
-          Bitte versuche es später erneut oder prüfe die API-Konfiguration.
-        </p>
+        <p className="mt-2 text-sm text-muted">Bitte versuche es später erneut.</p>
       </div>
     )
   }
@@ -109,20 +109,28 @@ export function NewsCards() {
           className="group relative flex overflow-hidden rounded-xl border border-border bg-anthracite-card transition-all duration-300 hover:border-accent hover:shadow-[0_0_30px_-5px_rgba(184,134,11,0.3)]"
         >
           <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-accent to-gold opacity-90 transition-opacity group-hover:opacity-100" />
-          <div className="relative flex min-h-0 w-36 shrink-0 overflow-hidden rounded-l-xl bg-anthracite sm:w-44 md:w-52">
-            {item.image_url ? (
-              <img
-                src={item.image_url}
-                alt=""
-                className="h-full min-h-[100px] w-full object-cover transition-transform duration-300 group-hover:scale-105 sm:min-h-[120px]"
-              />
-            ) : (
-              <div className="flex h-full min-h-[100px] w-full items-center justify-center bg-anthracite text-3xl text-muted sm:min-h-[120px]">
-                📰
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-r from-anthracite/60 to-transparent sm:from-transparent" />
+
+          {/* Bildcontainer – feste Breite + Mindesthöhe für Layoutstabilität */}
+          <div
+            className="relative shrink-0 overflow-hidden rounded-l-xl bg-anthracite-light"
+            style={{ width: '180px', minHeight: '130px' }}
+          >
+            <img
+              src={item.image_url ?? MMA_FALLBACK_IMAGE}
+              alt=""
+              crossOrigin="anonymous"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', minHeight: '130px' }}
+              className="transition-transform duration-300 group-hover:scale-105"
+              onError={(e) => {
+                const img = e.currentTarget as HTMLImageElement
+                if (img.src !== MMA_FALLBACK_IMAGE) {
+                  img.src = MMA_FALLBACK_IMAGE
+                }
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-anthracite/50 to-transparent" />
           </div>
+
           <div className="flex flex-1 flex-col justify-center p-4 pl-5 sm:p-5 sm:pl-6">
             <span className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-accent">
               {formatNewsDate(item.pubDate)}

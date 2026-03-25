@@ -4,11 +4,8 @@ import { fetchMMANews } from '@/lib/newsdata'
 export const dynamic = 'force-dynamic'
 export const revalidate = 300 // 5 Minuten
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const page = searchParams.get('page') ?? undefined
-
-  const data = await fetchMMANews(page)
+export async function GET() {
+  const data = await fetchMMANews()
 
   if (data.status === 'error') {
     return NextResponse.json(

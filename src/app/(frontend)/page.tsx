@@ -25,7 +25,7 @@ function getGymName(gym: Fighter['gym']): string | null {
 function formatNewsDate(dateStr: string | null | undefined): string {
   if (!dateStr) return ''
   const d = new Date(dateStr)
-  return d.toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: 'numeric' })
+  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
 /** Kompaktes Datum für Event-Karten (z. B. "15. März" oder "15.03. 18:00") */
@@ -139,17 +139,11 @@ export default async function HomePage() {
                   >
                     <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-accent to-gold opacity-90 transition-opacity group-hover:opacity-100" />
                     <div className="relative flex min-h-0 w-28 shrink-0 overflow-hidden rounded-l-xl bg-anthracite sm:w-36">
-                      {item.image_url ? (
-                        <img
-                          src={item.image_url}
-                          alt=""
-                          className="h-full min-h-[80px] w-full object-cover transition-transform duration-300 group-hover:scale-105 sm:min-h-[100px]"
-                        />
-                      ) : (
-                        <div className="flex h-full min-h-[80px] w-full items-center justify-center bg-anthracite text-2xl text-muted sm:min-h-[100px]">
-                          📰
-                        </div>
-                      )}
+                      <img
+                        src={item.image_url ?? '/hero-bg.png'}
+                        alt=""
+                        className="h-full min-h-[80px] w-full object-cover transition-transform duration-300 group-hover:scale-105 sm:min-h-[100px]"
+                      />
                       <div className="absolute inset-0 bg-gradient-to-r from-anthracite/60 to-transparent sm:from-transparent" />
                     </div>
                     <div className="flex flex-1 flex-col justify-center p-3 pl-4 sm:p-4 sm:pl-5">
