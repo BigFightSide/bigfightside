@@ -39,12 +39,12 @@ export function Nav({ user = null }: NavProps) {
           <Image
             src="/logo.png?v=20260326"
             alt="Big Fight Side MMA"
-            width={216}
-            height={58}
-            className="h-12 w-auto sm:h-14"
+            width={234}
+            height={63}
+            className="h-13 w-auto sm:h-15"
             priority
           />
-          <span className="hidden text-sm font-bold tracking-[0.2em] text-gold sm:inline">
+          <span className="hidden text-lg font-bold leading-tight tracking-[0.16em] text-gold sm:inline md:text-xl">
             BIG FIGHT SIDE
           </span>
         </Link>
