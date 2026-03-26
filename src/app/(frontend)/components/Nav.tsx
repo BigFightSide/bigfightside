@@ -33,15 +33,15 @@ export function Nav({ user = null }: NavProps) {
       <div className="mx-auto flex h-16 max-w-6xl min-w-0 items-center justify-between gap-2 px-4 sm:px-6">
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2 transition opacity-90 hover:opacity-100"
+          className="flex shrink-0 items-center gap-2 pt-2 transition opacity-90 hover:opacity-100 sm:pt-2.5"
           aria-label="Big Fight Side – Startseite"
         >
           <Image
             src="/logo.png?v=20260326"
             alt="Big Fight Side MMA"
-            width={180}
-            height={48}
-            className="h-10 w-auto sm:h-12"
+            width={216}
+            height={58}
+            className="h-12 w-auto sm:h-14"
             priority
           />
           <span className="hidden text-sm font-bold tracking-[0.2em] text-gold sm:inline">
@@ -49,8 +49,8 @@ export function Nav({ user = null }: NavProps) {
           </span>
         </Link>
 
-        {/* Desktop: Menüpunkte sichtbar */}
-        <div className="hidden sm:flex sm:min-w-0 sm:shrink sm:items-center sm:justify-end sm:gap-2">
+        {/* Desktop: Menüpunkte sichtbar (gleiche vertikale Ausrichtung wie Logo) */}
+        <div className="hidden pt-2 sm:flex sm:min-w-0 sm:shrink sm:items-center sm:justify-end sm:gap-2 sm:pt-2.5">
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
             <Link
               href="/news"
@@ -85,7 +85,7 @@ export function Nav({ user = null }: NavProps) {
         </div>
 
         {/* Mobile: Lupe + Profil + Burger (ganz rechts) */}
-        <div className="flex shrink-0 items-center justify-end gap-1 sm:hidden">
+        <div className="flex shrink-0 items-center justify-end gap-1 pt-2 sm:hidden">
           <SearchToggle />
           <UserMenu user={user} />
           <button
