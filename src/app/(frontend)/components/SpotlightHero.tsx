@@ -125,7 +125,7 @@ export function SpotlightHero({ newsItems }: SpotlightHeroProps) {
             <div className="absolute inset-x-0 bottom-0 p-4">
               <p className="text-[11px] uppercase tracking-[0.2em] text-zinc-300">Partner</p>
               <p className="mt-1 text-xl font-bold text-gold">bet365</p>
-              <p className="mt-1 text-sm text-zinc-200">Offizieller Werbepartner in Suedhessen</p>
+              <p className="mt-1 text-sm text-zinc-200">Offizieller Werbepartner in Europa</p>
               <Link
                 href="/kontakt"
                 className="mt-3 inline-flex items-center rounded-md border border-accent/70 bg-accent/15 px-3 py-1.5 text-xs font-semibold text-accent transition hover:bg-accent hover:text-white"
