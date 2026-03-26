@@ -9,6 +9,17 @@ const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 export const metadata: Metadata = {
   title: 'Big Fight Side – MMA-Plattform',
   description: 'MMA-Plattform – Kämpfer, Gyms, Events',
+  icons: {
+    icon: '/logo.png?v=20260326',
+    shortcut: '/logo.png?v=20260326',
+    apple: '/logo.png?v=20260326',
+  },
+  openGraph: {
+    images: ['/logo.png?v=20260326'],
+  },
+  twitter: {
+    images: ['/logo.png?v=20260326'],
+  },
 }
 
 const inter = Inter({

@@ -37,7 +37,7 @@ export function Nav({ user = null }: NavProps) {
           aria-label="Big Fight Side – Startseite"
         >
           <Image
-            src="/logo.png"
+            src="/logo.png?v=20260326"
             alt="Big Fight Side MMA"
             width={180}
             height={48}

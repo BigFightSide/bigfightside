@@ -4,6 +4,12 @@ import type { NextRequest } from 'next/server'
 export function middleware(request: NextRequest) {
   let pathname = request.nextUrl.pathname
 
+  // Next.js interne Endpunkte (HMR, Assets, Data) nicht anfassen.
+  // Das vermeidet Konflikte mit Dev-Websocket-/HMR-Nachrichten.
+  if (pathname.startsWith('/_next/')) {
+    return NextResponse.next()
+  }
+
   // /de oder /de/... auf / bzw. /... umleiten – es gibt keine Locale-Routen, /de führt sonst zu 404
   if (pathname === '/de' || pathname.startsWith('/de/')) {
     const target = pathname === '/de' ? '/' : pathname.slice(3)

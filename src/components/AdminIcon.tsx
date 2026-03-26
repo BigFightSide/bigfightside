@@ -7,7 +7,7 @@ import React from 'react'
 export const AdminIcon: React.FC<Record<string, unknown>> = () => {
   return (
     <img
-      src="/logo.png"
+      src="/logo.png?v=20260326"
       alt="Big Fight Side"
       style={{ height: 24, width: 24, objectFit: 'contain', display: 'block' }}
     />

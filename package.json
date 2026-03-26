@@ -5,7 +5,8 @@
   "description": "Big Fight Side – MMA-Plattform mit Payload CMS",
   "type": "module",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
+    "dev:turbo": "next dev --turbopack",
     "build": "npm run migrate:ci && payload generate:types && next build",
     "start": "next start",
     "lint": "next lint",

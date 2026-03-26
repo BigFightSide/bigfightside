@@ -72,6 +72,13 @@ export function SpotlightHero({ newsItems }: SpotlightHeroProps) {
                 </a>
               ))}
 
+              <div
+                className="pointer-events-none absolute right-3 top-3 z-[5] h-11 w-auto opacity-[0.38] sm:h-14 sm:opacity-[0.42]"
+                aria-hidden
+              >
+                <img src="/logo.png" alt="" className="h-full w-auto max-w-[128px] object-contain object-right sm:max-w-[152px]" />
+              </div>
+
               <div className="absolute left-3 top-3 z-10 flex items-center gap-2 rounded-md bg-black/35 px-2.5 py-1.5 backdrop-blur-sm">
                 {slides.map((_, idx) => (
                   <button
