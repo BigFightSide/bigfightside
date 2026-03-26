@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { NewsDataArticle } from '@/lib/newsdata'
@@ -12,6 +12,7 @@ type SpotlightHeroProps = {
 export function SpotlightHero({ newsItems }: SpotlightHeroProps) {
   const slides = useMemo(() => newsItems.slice(0, 5), [newsItems])
   const [activeIndex, setActiveIndex] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
 
   const hasSlides = slides.length > 0
 
@@ -25,32 +26,51 @@ export function SpotlightHero({ newsItems }: SpotlightHeroProps) {
     setActiveIndex((prev) => (prev + 1) % slides.length)
   }
 
-  const currentSlide = hasSlides ? slides[activeIndex] : null
+  useEffect(() => {
+    if (!hasSlides || isPaused) return
+
+    const timer = window.setInterval(() => {
+      setActiveIndex((prev) => (prev + 1) % slides.length)
+    }, 5000)
+
+    return () => {
+      window.clearInterval(timer)
+    }
+  }, [hasSlides, isPaused, slides.length, activeIndex])
 
   return (
     <section className="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6">
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[7fr_3fr] lg:items-stretch">
-        <div className="relative min-h-[280px] overflow-hidden rounded-lg border border-border bg-anthracite-light sm:min-h-[360px]">
-          {currentSlide ? (
+        <div
+          className="relative min-h-[340px] overflow-hidden rounded-lg border border-border bg-anthracite-light sm:min-h-[420px] lg:min-h-[500px]"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {hasSlides ? (
             <>
-              <a
-                href={currentSlide.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block h-full w-full"
-              >
-                <img
-                  src={currentSlide.image_url ?? '/hero-bg.png'}
-                  alt={currentSlide.title}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                />
-                <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
-                <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
-                  <p className="line-clamp-2 text-lg font-bold leading-snug text-white sm:text-2xl">
-                    {currentSlide.title}
-                  </p>
-                </div>
-              </a>
+              {slides.map((slide, idx) => (
+                <a
+                  key={slide.article_id}
+                  href={slide.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`group absolute inset-0 block h-full w-full transition-opacity duration-500 ${
+                    idx === activeIndex ? 'z-[1] opacity-100' : 'z-0 opacity-0 pointer-events-none'
+                  }`}
+                >
+                  <img
+                    src={slide.image_url ?? '/hero-bg.png'}
+                    alt={slide.title}
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
+                    <p className="line-clamp-2 text-lg font-bold leading-snug text-white sm:text-2xl">
+                      {slide.title}
+                    </p>
+                  </div>
+                </a>
+              ))}
 
               <div className="absolute left-3 top-3 z-10 flex items-center gap-2 rounded-md bg-black/35 px-2.5 py-1.5 backdrop-blur-sm">
                 {slides.map((_, idx) => (

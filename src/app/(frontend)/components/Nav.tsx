@@ -33,7 +33,7 @@ export function Nav({ user = null }: NavProps) {
       <div className="mx-auto flex h-16 max-w-6xl min-w-0 items-center justify-between gap-2 px-4 sm:px-6">
         <Link
           href="/"
-          className="flex shrink-0 items-center transition opacity-90 hover:opacity-100"
+          className="flex shrink-0 items-center gap-2 transition opacity-90 hover:opacity-100"
           aria-label="Big Fight Side – Startseite"
         >
           <Image
@@ -44,17 +44,14 @@ export function Nav({ user = null }: NavProps) {
             className="h-10 w-auto sm:h-12"
             priority
           />
+          <span className="hidden text-sm font-bold tracking-[0.2em] text-gold sm:inline">
+            BIG FIGHT SIDE
+          </span>
         </Link>
 
         {/* Desktop: Menüpunkte sichtbar */}
         <div className="hidden sm:flex sm:min-w-0 sm:shrink sm:items-center sm:justify-end sm:gap-2">
           <div className="flex shrink-0 items-center gap-1 sm:gap-2">
-            <Link
-              href="/hall-of-fame"
-              className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-muted-light transition hover:bg-anthracite-light hover:text-white"
-            >
-              Hall of Fame
-            </Link>
             <Link
               href="/news"
               className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-muted-light transition hover:bg-anthracite-light hover:text-white"
@@ -74,6 +71,12 @@ export function Nav({ user = null }: NavProps) {
               Events
             </Link>
             <FightersMenu />
+            <Link
+              href="/hall-of-fame"
+              className="whitespace-nowrap rounded-md px-3 py-2 text-sm font-semibold text-muted-light transition hover:bg-anthracite-light hover:text-white"
+            >
+              Hall of Fame
+            </Link>
           </div>
           <div className="ml-2 flex shrink-0 items-center gap-1 sm:gap-2">
             <SearchToggle />
@@ -127,13 +130,6 @@ export function Nav({ user = null }: NavProps) {
               </div>
               <div className="flex flex-col gap-1 p-4">
                 <Link
-                  href="/hall-of-fame"
-                  className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Hall of Fame
-                </Link>
-                <Link
                   href="/news"
                   className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
                   onClick={() => setMenuOpen(false)}
@@ -167,6 +163,13 @@ export function Nav({ user = null }: NavProps) {
                   onClick={() => setMenuOpen(false)}
                 >
                   Gewichtsklassen
+                </Link>
+                <Link
+                  href="/hall-of-fame"
+                  className="rounded-lg px-4 py-3 text-base font-semibold text-muted-light transition hover:bg-anthracite hover:text-white"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Hall of Fame
                 </Link>
               </div>
             </div>
