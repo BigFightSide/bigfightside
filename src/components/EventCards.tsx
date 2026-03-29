@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Loader2 } from 'lucide-react'
 
@@ -168,12 +169,15 @@ export function EventCards() {
             const CardContent = (
               <>
                 <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-accent to-gold opacity-90 transition-opacity group-hover:opacity-100" />
-                <div className="relative flex min-h-0 w-24 shrink-0 overflow-hidden rounded-l-xl bg-anthracite sm:w-28 md:w-36">
+                <div className="relative flex min-h-[100px] w-24 shrink-0 overflow-hidden rounded-l-xl bg-anthracite sm:min-h-[120px] sm:w-28 md:w-36">
                   {event.eventImageUrl ? (
-                    <img
+                    <Image
                       src={event.eventImageUrl}
                       alt=""
-                      className="h-full min-h-[100px] w-full object-cover transition-transform duration-300 group-hover:scale-105 sm:min-h-[120px]"
+                      fill
+                      sizes="(max-width: 640px) 96px, (max-width: 768px) 112px, 144px"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
                     />
                   ) : (
                     <div className="flex h-full min-h-[100px] w-full items-center justify-center bg-anthracite text-2xl text-accent sm:min-h-[120px]">

@@ -6,6 +6,9 @@ node_modules
 .next
 out
 
+# Lokaler News-Cache (RSS/DeepL, nur ohne Vercel)
+.cache
+
 # Payload
 payload-types.ts
 src/payload-types.ts

@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
 import { Search } from 'lucide-react'
@@ -230,13 +231,17 @@ export function FightersList({
                             src={imageUrl}
                             alt={fighter.name}
                             fallbackSrc="/fighter-placeholder.png"
-                            className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                            sizes="(max-width: 1024px) 100vw, 33vw"
+                            className="object-cover object-top transition-transform duration-300 group-hover:scale-105"
                           />
                         ) : (
-                          <img
+                          <Image
                             src="/fighter-placeholder.png"
                             alt="Platzhalter-Kämpfer"
-                            className="h-full w-full object-cover object-top opacity-80"
+                            fill
+                            sizes="(max-width: 1024px) 100vw, 33vw"
+                            className="object-cover object-top opacity-80"
+                            loading="lazy"
                           />
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-anthracite/90 to-transparent opacity-60" />

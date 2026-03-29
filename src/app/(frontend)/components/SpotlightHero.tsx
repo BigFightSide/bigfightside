@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import type { NewsDataArticle } from '@/lib/newsdata'
@@ -58,10 +59,14 @@ export function SpotlightHero({ newsItems }: SpotlightHeroProps) {
                     idx === activeIndex ? 'z-[1] opacity-100' : 'z-0 opacity-0 pointer-events-none'
                   }`}
                 >
-                  <img
+                  <Image
                     src={slide.image_url ?? '/hero-bg.png'}
                     alt={slide.title}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                    fill
+                    priority={idx === 0}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                    sizes="(max-width: 1024px) 100vw, 70vw"
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                   />
                   <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/90 via-black/55 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5">
@@ -73,10 +78,17 @@ export function SpotlightHero({ newsItems }: SpotlightHeroProps) {
               ))}
 
               <div
-                className="pointer-events-none absolute right-3 top-3 z-[5] h-11 w-auto opacity-[0.38] sm:h-14 sm:opacity-[0.42]"
+                className="pointer-events-none absolute right-3 top-3 z-[5] h-16 w-[200px] opacity-[0.38] sm:h-20 sm:w-[240px] sm:opacity-[0.42] lg:h-28 lg:w-[300px]"
                 aria-hidden
               >
-                <img src="/logo.png" alt="" className="h-full w-auto max-w-[128px] object-contain object-right sm:max-w-[152px]" />
+                <Image
+                  src="/logo.png"
+                  alt=""
+                  width={300}
+                  height={112}
+                  className="h-full w-full object-contain object-right"
+                  loading="lazy"
+                />
               </div>
 
               <div className="absolute left-3 top-3 z-10 flex items-center gap-2 rounded-md bg-black/35 px-2.5 py-1.5 backdrop-blur-sm">
@@ -123,10 +135,13 @@ export function SpotlightHero({ newsItems }: SpotlightHeroProps) {
             Werbung
           </span>
           <div className="relative h-full min-h-[220px]">
-            <img
+            <Image
               src="/hero-bg.png"
               alt="Werbepartner Südhessen"
-              className="h-full w-full object-cover"
+              fill
+              sizes="(max-width: 1024px) 100vw, 30vw"
+              className="object-cover"
+              loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/15" />
             <div className="absolute inset-x-0 bottom-0 p-4">

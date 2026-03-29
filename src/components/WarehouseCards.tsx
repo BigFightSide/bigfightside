@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import Image from 'next/image'
 import { ExternalLink, Package } from 'lucide-react'
 import {
   products,
@@ -64,10 +65,13 @@ function ProductCard({ product }: { product: Product }) {
         {/* Produktbild */}
         <div className="relative mb-4 aspect-square shrink-0 overflow-hidden rounded-lg bg-anthracite-light">
           {product.image ? (
-            <img
+            <Image
               src={product.image}
               alt={product.name}
-              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+              fill
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              loading="lazy"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-anthracite text-4xl text-muted">

@@ -217,13 +217,14 @@ export default async function RankingsPage({ searchParams }: Props) {
 
                     {/* Fighter Info */}
                     <div className="flex flex-1 items-center gap-4">
-                      <div className="hidden h-14 w-14 overflow-hidden rounded-full bg-anthracite-light sm:block">
+                      <div className="relative hidden h-14 w-14 overflow-hidden rounded-full bg-anthracite-light sm:block">
                         {imageUrl ? (
                           <MediaImageWithFallback
                             src={imageUrl}
                             alt={fighter.name}
                             fallbackSrc="/fighter-placeholder.png"
-                            className="h-full w-full object-cover object-top"
+                            sizes="56px"
+                            className="object-cover object-top"
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-2xl text-muted">

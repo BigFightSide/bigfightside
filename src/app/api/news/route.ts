@@ -1,8 +1,5 @@
 import { NextResponse } from 'next/server'
-import { fetchMMANews } from '@/lib/newsdata'
-
-export const dynamic = 'force-dynamic'
-export const revalidate = 300 // 5 Minuten
+import { fetchMMANews, MMA_NEWS_CACHE_SECONDS } from '@/lib/newsdata'
 
 export async function GET() {
   const data = await fetchMMANews()
@@ -14,9 +11,15 @@ export async function GET() {
     )
   }
 
-  return NextResponse.json({
+  const body = {
     results: data.results ?? [],
     totalResults: data.totalResults ?? 0,
     nextPage: data.nextPage ?? null,
+  }
+
+  return NextResponse.json(body, {
+    headers: {
+      'Cache-Control': `public, s-maxage=${MMA_NEWS_CACHE_SECONDS}, stale-while-revalidate=${MMA_NEWS_CACHE_SECONDS}`,
+    },
   })
 }

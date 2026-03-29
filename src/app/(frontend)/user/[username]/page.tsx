@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -7,6 +8,7 @@ import type { User, Fighter, News, Media } from '@/payload-types'
 import { ROLES, ROLE_LABELS } from '@/access/roles'
 import { Settings2, Heart, Newspaper } from 'lucide-react'
 import { getMediaDisplayUrl } from '@/lib/media-url'
+import { MediaImageWithFallback } from '../../components/MediaImageWithFallback'
 
 export const dynamic = 'force-dynamic'
 
@@ -145,20 +147,21 @@ export default async function UserProfilePage({
                     >
                       <div className="relative aspect-[4/3] overflow-hidden bg-anthracite-light">
                         {imageUrl ? (
-                          <img
+                          <MediaImageWithFallback
                             src={imageUrl}
                             alt={fighter.name}
-                            className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                            onError={(e) => {
-                              ;(e.currentTarget as HTMLImageElement).src =
-                                '/fighter-placeholder.png'
-                            }}
+                            fallbackSrc="/fighter-placeholder.png"
+                            sizes="(max-width: 640px) 50vw, 33vw"
+                            className="object-cover object-top transition-transform duration-300 group-hover:scale-105"
                           />
                         ) : (
-                          <img
+                          <Image
                             src="/fighter-placeholder.png"
                             alt="Platzhalter"
-                            className="h-full w-full object-cover object-top opacity-70"
+                            fill
+                            sizes="(max-width: 640px) 50vw, 33vw"
+                            className="object-cover object-top opacity-70"
+                            loading="lazy"
                           />
                         )}
                         <div className="absolute inset-0 bg-gradient-to-t from-anthracite/80 to-transparent" />

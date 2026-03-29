@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 
 /**
  * Kleines Icon für Favicon / eingeklappte Sidebar im Payload-Admin.
@@ -6,10 +7,13 @@ import React from 'react'
  */
 export const AdminIcon: React.FC<Record<string, unknown>> = () => {
   return (
-    <img
+    <Image
       src="/logo.png?v=20260326"
       alt="Big Fight Side"
-      style={{ height: 24, width: 24, objectFit: 'contain', display: 'block' }}
+      width={24}
+      height={24}
+      className="block object-contain"
+      unoptimized
     />
   )
 }

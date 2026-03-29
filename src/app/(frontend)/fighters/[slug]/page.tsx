@@ -1,10 +1,12 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { headers } from 'next/headers'
 import type { Fighter, Media, Gym } from '@/payload-types'
-import { FightHistoryChart, type FightHistoryChartPoint } from '../../components/FightHistoryChart'
+import type { FightHistoryChartPoint } from '../../components/FightHistoryChart'
+import { FightHistoryChartDynamic } from '../../components/FightHistoryChartDynamic'
 import { MediaImageWithFallback } from '../../components/MediaImageWithFallback'
 import { getMediaDisplayUrl } from '@/lib/media-url'
 import { FavoriteButton } from '@/components/FavoriteButton'
@@ -311,7 +313,7 @@ export default async function FighterDetailPage({ params }: Props) {
             {/* Links: Profilbild */}
             <div className="flex justify-center sm:block">
               <div
-                className="h-48 w-48 overflow-hidden rounded-lg border sm:h-56 sm:w-56"
+                className="relative h-48 w-48 overflow-hidden rounded-lg border sm:h-56 sm:w-56"
                 style={{ borderColor: BORDER }}
               >
                 {imageUrl ? (
@@ -319,13 +321,18 @@ export default async function FighterDetailPage({ params }: Props) {
                     src={imageUrl}
                     alt={fighter.name}
                     fallbackSrc="/fighter-placeholder.png"
-                    className="h-full w-full object-cover object-top"
+                    sizes="(max-width: 640px) 192px, 224px"
+                    priority
+                    className="object-cover object-top"
                   />
                 ) : (
-                  <img
+                  <Image
                     src="/fighter-placeholder.png"
                     alt="Platzhalter-Kämpfer"
-                    className="h-full w-full object-cover object-top opacity-80"
+                    fill
+                    sizes="224px"
+                    className="object-cover object-top opacity-80"
+                    loading="lazy"
                   />
                 )}
               </div>
@@ -489,7 +496,7 @@ export default async function FighterDetailPage({ params }: Props) {
                 Kampfverlauf
               </h2>
               <div className="px-4 py-4 sm:px-6 sm:py-5">
-                <FightHistoryChart data={chartData} />
+                <FightHistoryChartDynamic data={chartData} />
               </div>
             </section>
             <div className="my-6 border-t" style={{ borderColor: BORDER }} />

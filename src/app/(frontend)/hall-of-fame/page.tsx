@@ -74,12 +74,16 @@ export default async function HallOfFamePage() {
                   {/* Bild – Schwarz-Weiß, hoher Kontrast */}
                   <div className="relative aspect-[4/5] overflow-hidden bg-neutral-900">
                     {imageUrl ? (
-                      <div className="h-full w-full" style={{ filter: 'grayscale(100%) contrast(1.15) brightness(0.9)' }}>
+                      <div
+                        className="absolute inset-0 overflow-hidden transition-transform duration-500 group-hover:scale-105"
+                        style={{ filter: 'grayscale(100%) contrast(1.15) brightness(0.9)' }}
+                      >
                         <MediaImageWithFallback
                           src={imageUrl}
                           alt={legend.name}
                           fallbackSrc="/fighter-placeholder.png"
-                          className="h-full w-full object-cover object-top transition-all duration-500 group-hover:scale-105"
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover object-top"
                         />
                       </div>
                     ) : (

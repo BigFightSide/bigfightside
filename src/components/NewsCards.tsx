@@ -1,10 +1,27 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { Loader2 } from 'lucide-react'
 
 const MMA_FALLBACK_IMAGE =
   'https://images.unsplash.com/photo-1595078475328-1ab05d0a6a0e?auto=format&fit=crop&q=80&w=500'
+
+function NewsCardThumb({ src, fallback }: { src: string; fallback: string }) {
+  const [effective, setEffective] = useState(src)
+
+  return (
+    <Image
+      src={effective}
+      alt=""
+      fill
+      sizes="180px"
+      className="object-cover transition-transform duration-300 group-hover:scale-105"
+      loading="lazy"
+      onError={() => setEffective(fallback)}
+    />
+  )
+}
 
 /**
  * Ruft MMA-News von unserer API ab (proxied zum GNP1 RSS-Feed).
@@ -112,21 +129,11 @@ export function NewsCards() {
 
           {/* Bildcontainer – feste Breite + Mindesthöhe für Layoutstabilität */}
           <div
-            className="relative shrink-0 overflow-hidden rounded-l-xl bg-anthracite-light"
-            style={{ width: '180px', minHeight: '130px' }}
+            className="relative w-[180px] min-h-[130px] shrink-0 overflow-hidden rounded-l-xl bg-anthracite-light"
           >
-            <img
+            <NewsCardThumb
               src={item.image_url ?? MMA_FALLBACK_IMAGE}
-              alt=""
-              crossOrigin="anonymous"
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', minHeight: '130px' }}
-              className="transition-transform duration-300 group-hover:scale-105"
-              onError={(e) => {
-                const img = e.currentTarget as HTMLImageElement
-                if (img.src !== MMA_FALLBACK_IMAGE) {
-                  img.src = MMA_FALLBACK_IMAGE
-                }
-              }}
+              fallback={MMA_FALLBACK_IMAGE}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-anthracite/50 to-transparent" />
           </div>

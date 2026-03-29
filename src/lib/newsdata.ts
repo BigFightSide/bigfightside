@@ -1,12 +1,23 @@
 /**
- * LowKickMMA RSS-Feed – direkt serverseitig geparsed.
- * Titel + Beschreibung werden via DeepL API ins Deutsche übersetzt.
+ * LowKickMMA RSS-Feed – serverseitig geparsed.
+ * Titel + Beschreibung via DeepL API (ein Request pro Batch).
+ * Ergebnisse werden mit Next.js Data Cache (unstable_cache) 45 Minuten gehalten –
+ * kein RSS/DeepL bei jedem Seitenaufruf.
  * Benötigt: DEEPL_API_KEY in .env (kostenlos: deepl.com/pro#developer)
  */
+
+import { unstable_cache } from 'next/cache'
+import fs from 'fs/promises'
+import path from 'path'
 
 const RSS_FEED_URL = 'https://lowkickmma.com/feed/'
 const MAX_ITEMS = 9
 const FEED_SOURCE = 'LowKickMMA'
+
+/** Revalidate: 45 Minuten (Zielvorgabe 30–60 Min.) */
+export const MMA_NEWS_CACHE_SECONDS = 45 * 60
+
+const FILE_CACHE_PATH = path.join(process.cwd(), '.cache', 'mma-news.json')
 
 export interface NewsDataArticle {
   article_id: string
@@ -26,10 +37,6 @@ export interface NewsDataResponse {
   message?: string
   code?: string
 }
-
-// ---------------------------------------------------------------------------
-// XML-Hilfsfunktionen
-// ---------------------------------------------------------------------------
 
 function xmlText(block: string, tag: string): string | null {
   const cdata = block.match(
@@ -62,19 +69,10 @@ function stripHtml(html: string): string {
     .trim()
 }
 
-// ---------------------------------------------------------------------------
-// DeepL Übersetzung
-// ---------------------------------------------------------------------------
-
-/**
- * Übersetzt mehrere Texte auf einmal via DeepL API (ein HTTP-Request für alle).
- * Gibt die Originaltexte zurück, wenn kein API-Key vorhanden ist.
- */
 async function translateBatch(texts: string[]): Promise<string[]> {
   const apiKey = process.env.DEEPL_API_KEY
   if (!apiKey || texts.length === 0) return texts
 
-  // Free Keys enden auf ":fx" → api-free.deepl.com; Pro Keys → api.deepl.com
   const baseUrl = apiKey.endsWith(':fx')
     ? 'https://api-free.deepl.com/v2/translate'
     : 'https://api.deepl.com/v2/translate'
@@ -90,7 +88,6 @@ async function translateBatch(texts: string[]): Promise<string[]> {
         text: texts,
         target_lang: 'DE',
         source_lang: 'EN',
-        // Markierungen (z. B. Eigennamen) nicht übersetzen
         tag_handling: 'html',
       }),
     })
@@ -109,14 +106,41 @@ async function translateBatch(texts: string[]): Promise<string[]> {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Haupt-Fetch-Funktion
-// ---------------------------------------------------------------------------
+async function readDiskCache(): Promise<NewsDataResponse | null> {
+  if (process.env.VERCEL) return null
+  try {
+    const raw = await fs.readFile(FILE_CACHE_PATH, 'utf8')
+    const parsed: { savedAt: number; payload: NewsDataResponse } = JSON.parse(raw)
+    if (Date.now() - parsed.savedAt > MMA_NEWS_CACHE_SECONDS * 1000) return null
+    return parsed.payload
+  } catch {
+    return null
+  }
+}
 
-export async function fetchMMANews(_page?: string): Promise<NewsDataResponse> {
+async function writeDiskCache(payload: NewsDataResponse): Promise<void> {
+  if (process.env.VERCEL) return
+  try {
+    await fs.mkdir(path.dirname(FILE_CACHE_PATH), { recursive: true })
+    await fs.writeFile(
+      FILE_CACHE_PATH,
+      JSON.stringify({ savedAt: Date.now(), payload }),
+      'utf8',
+    )
+  } catch {
+    /* optionaler Dev-Cache */
+  }
+}
+
+async function fetchMMANewsFresh(): Promise<NewsDataResponse> {
+  const fromDisk = await readDiskCache()
+  if (fromDisk?.status === 'success' && fromDisk.results?.length) {
+    return fromDisk
+  }
+
   try {
     const res = await fetch(RSS_FEED_URL, {
-      next: { revalidate: 300 },
+      cache: 'no-store',
       headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; BigFightSide)',
         Accept: 'application/rss+xml, application/xml, text/xml, */*',
@@ -136,7 +160,6 @@ export async function fetchMMANews(_page?: string): Promise<NewsDataResponse> {
 
     const limited = itemBlocks.slice(0, MAX_ITEMS)
 
-    // Rohdaten aus XML extrahieren
     const raw = limited.map((item, index) => {
       const title = stripHtml(xmlText(item, 'title') ?? '')
       const link = xmlText(item, 'link') ?? xmlText(item, 'guid') ?? ''
@@ -144,7 +167,6 @@ export async function fetchMMANews(_page?: string): Promise<NewsDataResponse> {
       const pubDate = xmlText(item, 'pubDate') ?? ''
       const descHtml = xmlText(item, 'description') ?? ''
 
-      // Bild: erstes <img> aus description (LowKickMMA legt es als erstes Element rein)
       const imageUrl =
         imgFromHtml(descHtml) ??
         imgFromHtml(xmlText(item, 'content:encoded') ?? '') ??
@@ -155,7 +177,6 @@ export async function fetchMMANews(_page?: string): Promise<NewsDataResponse> {
       return { article_id: guid || `rss-${index}`, title, link, pubDate, imageUrl, plainDescription }
     })
 
-    // Alle Titel + Beschreibungen in einem einzigen DeepL-Aufruf übersetzen
     const titlesToTranslate = raw.map((r) => r.title)
     const descsToTranslate = raw.map((r) => r.plainDescription ?? '')
 
@@ -168,7 +189,6 @@ export async function fetchMMANews(_page?: string): Promise<NewsDataResponse> {
       article_id: r.article_id,
       title: translatedTitles[i] ?? r.title,
       link: r.link,
-      // Bild-URL durch serverseitigen Proxy leiten → umgeht Hotlink-Schutz
       image_url: r.imageUrl
         ? `/api/proxy-image?url=${encodeURIComponent(r.imageUrl)}`
         : null,
@@ -177,11 +197,31 @@ export async function fetchMMANews(_page?: string): Promise<NewsDataResponse> {
       source_name: FEED_SOURCE,
     }))
 
-    return { status: 'success', totalResults: results.length, results, nextPage: null }
+    const out: NewsDataResponse = {
+      status: 'success',
+      totalResults: results.length,
+      results,
+      nextPage: null,
+    }
+    await writeDiskCache(out)
+    return out
   } catch (err) {
     return {
       status: 'error',
       message: err instanceof Error ? err.message : 'Netzwerkfehler beim Laden der News',
     }
   }
+}
+
+const getCachedMMANews = unstable_cache(
+  async () => fetchMMANewsFresh(),
+  ['mma-rss-deepl-news'],
+  {
+    revalidate: MMA_NEWS_CACHE_SECONDS,
+    tags: ['mma-news'],
+  },
+)
+
+export async function fetchMMANews(_page?: string): Promise<NewsDataResponse> {
+  return getCachedMMANews()
 }

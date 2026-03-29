@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
@@ -50,10 +51,13 @@ export default async function NewsDetailPage({
         {/* Titelbild */}
         {imageUrl && (
           <div className="relative aspect-[21/9] w-full overflow-hidden bg-anthracite-light">
-            <img
+            <Image
               src={imageUrl}
               alt=""
-              className="h-full w-full object-cover"
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-anthracite via-anthracite/40 to-transparent" />
           </div>

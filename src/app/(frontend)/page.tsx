@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import type { Fighter, Media, Gym, Event, HallOfFame as HallOfFameLegend } from '@/payload-types'
@@ -138,12 +139,13 @@ export default async function HomePage() {
                         href={`/fighters/${fighter.slug}`}
                         className="group flex items-center gap-3 rounded-lg border border-border bg-anthracite-light p-3 transition-colors hover:border-accent"
                       >
-                        <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-anthracite">
+                        <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md bg-anthracite">
                           <MediaImageWithFallback
                             src={imageUrl || '/fighter-placeholder.png'}
                             alt={fighter.name}
                             fallbackSrc="/fighter-placeholder.png"
-                            className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-105"
+                            sizes="56px"
+                            className="object-cover object-top transition duration-300 group-hover:scale-105"
                           />
                         </div>
                         <div className="min-w-0">
@@ -219,7 +221,8 @@ export default async function HomePage() {
                           src={imageUrl || '/fighter-placeholder.png'}
                           alt={legend.name}
                           fallbackSrc="/fighter-placeholder.png"
-                          className="h-full w-full object-cover object-top grayscale transition-transform duration-300 group-hover:scale-105 group-hover:grayscale-0"
+                          sizes="(max-width: 1024px) 50vw, 33vw"
+                          className="object-cover object-top grayscale transition-transform duration-300 group-hover:scale-105 group-hover:grayscale-0"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-anthracite/90 to-transparent opacity-60" />
                       </div>
@@ -276,10 +279,13 @@ export default async function HomePage() {
                 <div className="flex flex-1 flex-col p-4 pl-5">
                   <div className="relative mb-3 aspect-square overflow-hidden rounded-lg bg-anthracite-light">
                     {product.image ? (
-                      <img
+                      <Image
                         src={product.image}
                         alt={product.name}
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                        fill
+                        sizes="(max-width: 1024px) 50vw, 25vw"
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        loading="lazy"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center bg-anthracite">

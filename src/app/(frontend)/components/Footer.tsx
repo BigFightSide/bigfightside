@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FaInstagram, FaYoutube, FaFacebookF, FaTiktok, FaXTwitter } from 'react-icons/fa6'
+import { FaInstagram, FaYoutube, FaWhatsapp, FaTiktok } from 'react-icons/fa6'
 
 export function Footer() {
   return (
@@ -12,14 +12,14 @@ export function Footer() {
               Keine News von Big Fight Side mehr verpassen
             </h2>
             <p className="mt-2 max-w-xl text-xs sm:text-sm text-muted-light">
-              Bleib auf dem Laufenden zu neuen Events, Kämpfern, Rankings und exklusiven Aktionen aus der MMA‑Szene.
+              Bleib auf dem Laufenden zu neuen Events, Kämpfern, Rankings und exklusiven Aktionen aus der MMA-Szene.
             </p>
           </div>
           <form className="flex w-full max-w-md flex-col gap-2 sm:flex-row">
             <input
               type="email"
               required
-              placeholder="Ihre E‑Mail"
+              placeholder="Ihre E-Mail"
               className="h-10 flex-1 rounded-md border border-border bg-anthracite-card px-3 text-xs text-white placeholder:text-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             />
             <button
@@ -40,7 +40,7 @@ export function Footer() {
             <div className="space-y-3">
               <div className="text-lg font-bold tracking-tight text-white">Big Fight Side</div>
               <p className="text-xs text-muted-light">
-                Deine Plattform für MMA in Deutschland und Europa – Events, Kämpfer, Gyms, Rankings und News auf einen Blick.
+                Deine Plattform für MMA in Deutschland und Europa - Events, Kämpfer, Gyms, Rankings und News auf einen Blick.
               </p>
             </div>
             <div className="space-y-2">
@@ -112,11 +112,10 @@ export function Footer() {
             <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-light">Folge uns</h3>
             <div className="mt-3 flex flex-wrap gap-2">
               {[
-                { label: 'Instagram', href: 'https://instagram.com/bigfightside', Icon: FaInstagram },
-                { label: 'YouTube', href: 'https://youtube.com', Icon: FaYoutube },
-                { label: 'Facebook', href: 'https://facebook.com', Icon: FaFacebookF },
-                { label: 'TikTok', href: 'https://tiktok.com', Icon: FaTiktok },
-                { label: 'X', href: 'https://x.com', Icon: FaXTwitter },
+                { label: 'Instagram', href: 'https://www.instagram.com/big_fight_side/', Icon: FaInstagram },
+                { label: 'YouTube', href: 'https://www.youtube.com/@BIGFIGHTSIDE', Icon: FaYoutube },
+                { label: 'WhatsApp', href: 'https://whatsapp.com/channel/0029VbCLTUPHVvTUPaR3A11D', Icon: FaWhatsapp },
+                { label: 'TikTok', href: 'https://www.tiktok.com/@bigfightside', Icon: FaTiktok },
               ].map((item) => (
                 <a
                   key={item.label}
@@ -136,18 +135,15 @@ export function Footer() {
         </div>
 
         {/* Untere Zeile */}
-        <div className="mt-10 border-t border-border pt-6 text-xs text-muted-light">
+        <div className="mt-10 border-t border-border pt-6 pb-8 text-xs text-muted-light">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p>© {new Date().getFullYear()} Big Fight Side. Alle Rechte vorbehalten.</p>
             <div className="flex flex-wrap gap-3">
-              <Link href="/privacy" className="transition hover:text-white">
+              <Link href="/privacy" className="font-semibold text-white transition hover:text-accent-hover">
                 Datenschutz
               </Link>
-              <Link href="/imprint" className="transition hover:text-white">
+              <Link href="/impressum" className="font-semibold text-white transition hover:text-accent-hover">
                 Impressum
-              </Link>
-              <Link href="/cookies" className="transition hover:text-white">
-                Cookie-Einstellungen
               </Link>
             </div>
           </div>
