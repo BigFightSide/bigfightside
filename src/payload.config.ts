@@ -61,8 +61,19 @@ const serverURL =
   process.env.NEXT_PUBLIC_SERVER_URL ||
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined)
 
+// Payload liest JWT aus Cookies nur, wenn Origin in csrf erlaubt ist (extractJWT).
+// Browser-POSTs (z. B. fetch zu /api/favorites) senden Origin; normale GET-Navigation oft nicht —
+// daher wirkte die Session auf Seiten „eingeloggt“, beim Favoriten-Klick aber 401.
+const devPort = process.env.PORT || '3000'
+const csrfOrigins = [
+  'http://localhost:' + devPort,
+  'http://127.0.0.1:' + devPort,
+]
+
 export default buildConfig({
   ...(serverURL && { serverURL }),
+  // localhost explizit erlauben, falls serverURL nur Production ist (typisch in .env)
+  csrf: csrfOrigins,
   admin: {
     user: Users.slug,
     importMap: {

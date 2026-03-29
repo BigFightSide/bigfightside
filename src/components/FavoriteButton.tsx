@@ -36,7 +36,8 @@ export function FavoriteButton({
           const data = await res.json()
           setIsFavorite(data.isFavorite)
         } else if (res.status === 401) {
-          window.location.href = `/login?redirectTo=${encodeURIComponent(window.location.pathname)}`
+          const path = window.location.pathname + window.location.search
+          window.location.href = `/login?redirect=${encodeURIComponent(path)}`
         }
       } catch {
         // Netzwerkfehler ignorieren
